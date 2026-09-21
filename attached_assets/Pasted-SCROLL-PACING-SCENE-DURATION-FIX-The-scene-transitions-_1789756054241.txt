@@ -1,0 +1,388 @@
+SCROLL PACING / SCENE DURATION FIX
+
+The scene transitions are now clean and no longer overlapping, but the scenes are changing TOO FAST.
+
+The user does not have enough time to experience, read, and appreciate each scene.
+
+DO NOT change:
+- bottle positioning
+- bottle animation style
+- 3D PNG assets
+- typography
+- color palettes
+- color transitions
+- scene content
+- order reveal concept
+- clean no-overlap rule
+
+ONLY fix the pacing and scroll duration.
+
+==================================================
+CORE GOAL
+==================================================
+
+Each scene should feel like a real cinematic moment.
+
+The user should have enough scroll distance to:
+
+1. See the scene enter
+2. Understand what appeared
+3. Read the content comfortably
+4. Watch the bottle movement
+5. Experience the visual atmosphere
+6. Then naturally transition to the next scene
+
+Right now the experience feels rushed.
+
+Make the entire fragrance journey LONGER.
+
+==================================================
+INCREASE TOTAL SCROLL DISTANCE
+==================================================
+
+Increase the scrollable height of EACH fragrance experience substantially.
+
+Do NOT simply speed up or slow down the existing animation.
+
+Give the animation more physical scroll space.
+
+Target approximately:
+
+1500–2500px MINIMUM per fragrance experience.
+
+For fragrances with more content, use approximately:
+
+2000–3000px.
+
+The exact value should depend on the number of scenes and viewport size.
+
+The user should feel that each fragrance is its own chapter.
+
+==================================================
+SCENE PACING
+==================================================
+
+Every scene should have:
+
+ENTER
+    ↓
+LONG HOLD
+    ↓
+GRADUAL EXIT
+    ↓
+SHORT BREATHING SPACE
+    ↓
+NEXT SCENE
+
+The HOLD period should be significantly longer than before.
+
+Conceptually:
+
+ENTER = 15–20%
+HOLD = 55–65%
+EXIT = 15–20%
+BREATHING = 5–10%
+
+The exact implementation can differ.
+
+The important thing is that the user spends MOST of the scroll progress experiencing the current scene.
+
+==================================================
+DO NOT MAKE THE TRANSITION GAP HUGE
+==================================================
+
+We still need the clean separation from the previous fix.
+
+However, do NOT create giant empty gaps.
+
+The bottle should continue moving and the background should continue evolving during the transition.
+
+The user should experience:
+
+SCENE 1
+──────────────
+long readable moment
+──────────────
+gradual exit
+──────────────
+brief breathing
+──────────────
+SCENE 2
+──────────────
+long readable moment
+──────────────
+gradual exit
+
+Not:
+
+SCENE 1
+↓
+huge empty space
+↓
+SCENE 2
+
+==================================================
+READABILITY
+==================================================
+
+The user should be able to comfortably read every important text element before it disappears.
+
+For example:
+
+TOP NOTES
+
+Mandarin
+Bergamot
+Pink Pepper
+
+should remain visible long enough to actually read.
+
+Do NOT make text appear for only a fraction of a second.
+
+The same applies to:
+
+- fragrance name
+- descriptions
+- heart notes
+- base notes
+- editorial statements
+- size selector
+- price
+- CTA
+
+==================================================
+BOTTLE ANIMATION PACING
+==================================================
+
+The bottle should move more slowly through each scene.
+
+Do NOT remove the movement.
+
+Instead, stretch the movement over a larger scroll range.
+
+For example:
+
+Current:
+
+scroll 0–100
+bottle rotates quickly
+
+Desired:
+
+scroll 0–300
+bottle performs the same movement gradually
+
+This makes the animation feel luxurious instead of rushed.
+
+Use scrub-based animation.
+
+==================================================
+IMPORTANT: DO NOT USE TIME-BASED DELAYS
+==================================================
+
+Do NOT solve this with:
+
+setTimeout()
+setInterval()
+artificial delays
+or animations that play independently of scrolling.
+
+The experience must remain scroll-controlled.
+
+The user controls the pacing by scrolling.
+
+Increase the scroll distance and distribute the GSAP timelines across that space.
+
+==================================================
+GSAP / SCROLLTRIGGER
+==================================================
+
+If using ScrollTrigger:
+
+Increase the pin duration / section height.
+
+For example, conceptually:
+
+ScrollTrigger:
+  trigger: fragranceExperience
+  pin: true
+  scrub: true
+  start: "top top"
+  end: "+=2200"
+
+instead of a very short scroll range.
+
+The exact values should be tuned visually.
+
+Do NOT blindly use 2200 for every section.
+
+==================================================
+SCENE TIMELINE
+==================================================
+
+Create a longer master timeline.
+
+Conceptual example:
+
+Scene 1:
+0.00 → 0.15 ENTER
+0.15 → 0.55 HOLD
+0.55 → 0.70 EXIT
+
+Transition:
+0.70 → 0.76 BREATHING
+
+Scene 2:
+0.76 → 0.88 ENTER
+0.88 → 1.20 HOLD
+1.20 → 1.35 EXIT
+
+Scene 3:
+...
+
+These numbers are conceptual.
+
+The actual timeline should be normalized properly.
+
+The key requirement:
+
+EACH SCENE MUST HAVE A LARGE HOLD PERIOD.
+
+==================================================
+SCENE IMPORTANCE
+==================================================
+
+Not every scene needs identical duration.
+
+Give MORE time to:
+
+- fragrance introduction
+- top/heart/base notes
+- major editorial statements
+- final product presentation
+- order reveal
+
+Give LESS time to:
+
+- simple transitions
+- decorative-only moments
+- short supporting scenes
+
+This should feel like cinematic pacing.
+
+==================================================
+ORDER REVEAL
+==================================================
+
+The final order reveal should also be slower.
+
+The user should have enough time to:
+
+see the bottle blur
+↓
+read fragrance name
+↓
+choose 5 ML / 10 ML
+↓
+see price
+↓
+select quantity
+↓
+understand ADD TO CART
+
+Do not rush the purchase interface.
+
+==================================================
+BETWEEN FRAGRANCES
+==================================================
+
+The transition from one fragrance to the next should also have enough breathing room.
+
+Example:
+
+HAWAS GOLD DIGGER
+final order scene
+        ↓
+slow fade
+        ↓
+blue atmosphere remains
+        ↓
+blue gradually shifts toward blush
+        ↓
+new fragrance begins
+        ↓
+CLUB DE NUIT WOMAN
+
+Do not immediately jump into the next fragrance.
+
+==================================================
+MOBILE
+==================================================
+
+Mobile users need even more scroll distance because:
+
+- text occupies more vertical space
+- bottle is larger relative to viewport
+- users need time to read
+
+Do not simply use desktop scene durations on mobile.
+
+Use responsive scroll distances.
+
+==================================================
+FINAL TEST
+==================================================
+
+Test by slowly scrolling, not rapidly scrolling.
+
+At every scene ask:
+
+"Could a normal user comfortably read this before the next scene starts?"
+
+If the answer is no:
+
+INCREASE THE SCENE'S HOLD DURATION.
+
+Also ask:
+
+"Does the bottle have enough time to move naturally?"
+
+If no:
+
+INCREASE THE SCROLL RANGE.
+
+==================================================
+TARGET EXPERIENCE
+==================================================
+
+The user should feel:
+
+"I am exploring this fragrance."
+
+NOT:
+
+"I am scrolling through an animation."
+
+The pacing should feel:
+
+SLOW
+LUXURIOUS
+CINEMATIC
+INTENTIONAL
+SMOOTH
+
+Think luxury perfume campaign, not fast website slideshow.
+
+IMPORTANT:
+
+Do not change the existing visual design.
+
+Do not change the existing transitions.
+
+Do not change the current bottle positioning.
+
+Do not change typography.
+
+Do not change colors.
+
+Simply give each scene and each fragrance substantially more scroll space and a longer HOLD phase.

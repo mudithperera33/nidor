@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "NIDOR Fragrance Collection"
+description = "A premium fragrance decant storefront for NIDOR, presenting five curated scents through immersive editorial product experiences with 5 ml and 10 ml options."
+version = "1.0.0"
+id = "artifacts/nidor"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25251
+
+[services.development]
+run = "pnpm --filter @workspace/nidor run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nidor", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/nidor/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25251"
+BASE_PATH = "/"

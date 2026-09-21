@@ -1,0 +1,273 @@
+IMPORTANT — DO NOT CHANGE THE CURRENT SCROLL TRANSITIONS OR THE OVERALL DESIGN.
+
+The scroll-driven transitions are now working well. Keep them exactly as they are.
+
+The next task is ONLY to fix the new 3D perfume PNG assets and their positioning.
+
+==================================================
+PROBLEM
+==================================================
+
+I have replaced the original perfume images with new high-resolution 3D PNG bottle assets.
+
+The new PNGs have different dimensions, transparent padding, and visual bounding boxes, so some bottles appear too high, too low, too far left/right, or too small/large.
+
+I want ALL perfume bottles to appear professionally centered and consistently scaled throughout the existing scroll animations.
+
+Do NOT redesign the sections.
+
+Do NOT change the color transitions.
+
+Do NOT change the scroll animation behavior.
+
+Do NOT change the typography or layout unless absolutely necessary to correctly position the bottle.
+
+==================================================
+GOAL
+==================================================
+
+Every perfume bottle should have a consistent visual presentation:
+
+- centered within its intended visual area
+- vertically balanced
+- similar visual scale relative to the viewport
+- never touching the edges unintentionally
+- never clipped
+- never appearing tiny because of transparent PNG whitespace
+- never appearing oversized compared with the other fragrances
+
+The bottle itself should be the visual center of attention.
+
+==================================================
+IMPORTANT: PNG TRANSPARENT PADDING
+==================================================
+
+Do NOT assume the PNG canvas is tightly cropped around the bottle.
+
+Inspect the actual uploaded PNG assets.
+
+Some files may contain transparent empty space around the bottle.
+
+CSS:
+
+object-fit: contain
+
+alone is NOT sufficient if the source images have different transparent margins.
+
+Create a reusable product-image system that compensates for this.
+
+Use a common visual wrapper/container and normalize each bottle's visual size.
+
+==================================================
+CREATE A PRODUCT IMAGE CONFIGURATION
+==================================================
+
+Create something similar to:
+
+fragranceVisualConfig = {
+  hawasGoldDigger: {
+    scale: ...,
+    x: ...,
+    y: ...,
+    rotation: ...,
+  },
+
+  clubDeNuitWoman: {
+    scale: ...,
+    x: ...,
+    y: ...,
+    rotation: ...,
+  },
+
+  yara: {
+    scale: ...,
+    x: ...,
+    y: ...,
+    rotation: ...,
+  },
+
+  hawasChrome: {
+    scale: ...,
+    x: ...,
+    y: ...,
+    rotation: ...,
+  },
+
+  clubDeNuitIntenseMan: {
+    scale: ...,
+    x: ...,
+    y: ...,
+    rotation: ...,
+  }
+}
+
+Use these values to normalize the individual assets.
+
+Do NOT hardcode completely separate layouts for every fragrance.
+
+The shared FragranceExperience component should use these configuration values.
+
+==================================================
+VISUAL CENTERING
+==================================================
+
+The visual center should refer to the ACTUAL BOTTLE, not simply the PNG canvas.
+
+For each PNG:
+
+1. Determine the visible/non-transparent bounding area.
+2. Identify the approximate visual center of the bottle.
+3. Normalize its position.
+4. Apply a per-product scale/offset only where necessary.
+
+If practical, use a preprocessing/build-time approach to detect the non-transparent bounding box.
+
+If that is unnecessary, use a manual configuration object with per-image scale and X/Y offsets.
+
+The result matters more than the implementation.
+
+==================================================
+DESKTOP
+==================================================
+
+On desktop:
+
+- bottle should generally occupy approximately 35–55% of viewport height depending on the product
+- keep generous breathing room
+- bottle should be visually centered in its allocated area
+- do not let transparent padding determine perceived size
+
+The bottle can move during the scroll animation, but its BASE position should always be correctly normalized.
+
+==================================================
+MOBILE
+==================================================
+
+On mobile:
+
+- bottle should remain large and prominent
+- center horizontally
+- keep enough space around the bottle
+- account for the taller mobile aspect ratio
+- never allow the bottle to become tiny because of the PNG canvas
+- never clip the cap or bottom of the bottle
+
+Use responsive scaling.
+
+==================================================
+SCROLL ANIMATION COMPATIBILITY
+==================================================
+
+VERY IMPORTANT:
+
+The existing GSAP/ScrollTrigger animations are already working well.
+
+Do NOT replace them.
+
+Instead, separate:
+
+BASE PRODUCT TRANSFORM
+
+from
+
+SCROLL ANIMATION TRANSFORM.
+
+Conceptually:
+
+finalTransform =
+  basePosition
+  + baseScale
+  + scrollPosition
+  + scrollScale
+  + scrollRotation
+
+The existing scroll animation should continue working on top of the normalized base position.
+
+Do not create conflicting CSS transforms in multiple places.
+
+Use a wrapper hierarchy if necessary:
+
+ProductStage
+  └── ProductPositionWrapper
+       └── ProductAnimationWrapper
+            └── ProductImage
+
+This allows positioning and scroll animation to coexist cleanly.
+
+==================================================
+BOTTLE PRESENTATION
+==================================================
+
+The new PNGs are intended to behave like premium 3D product renders.
+
+Make them feel like actual hero objects.
+
+Use:
+
+- subtle drop shadow
+- subtle ambient glow where appropriate
+- perspective
+- depth
+- clean edges
+- no visible image box
+- transparent background
+
+Do NOT add a rectangular background behind the PNG.
+
+Do NOT place the PNG inside a generic card.
+
+The bottle should float naturally in the fragrance world.
+
+==================================================
+DO NOT MODIFY
+==================================================
+
+Keep unchanged:
+
+- current fragrance color transitions
+- current scroll-triggered storytelling
+- current section order
+- current navigation
+- current typography
+- current NIDOR branding
+- current notes animation
+- current page structure
+
+This is an asset positioning and normalization pass.
+
+==================================================
+QUALITY CHECK
+==================================================
+
+After implementing:
+
+Scroll through ALL FIVE fragrance experiences.
+
+Check the bottles side-by-side at their main hero positions.
+
+The visual size should feel intentional and consistent.
+
+Check:
+
+1. Hawas Gold Digger
+2. Club de Nuit Woman
+3. Yara
+4. Hawas Chrome
+5. Club de Nuit Intense Man
+
+Make sure:
+
+- all are centered
+- all are visually balanced
+- all have similar perceived scale
+- none are clipped
+- none have excessive transparent whitespace
+- none look randomly positioned
+- scroll animations still work exactly as before
+- mobile is also centered and correctly scaled
+
+Do NOT stop after fixing one bottle.
+
+Normalize ALL FIVE.
+
+Do not change anything unrelated to this task.

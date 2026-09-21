@@ -1,0 +1,532 @@
+IMPORTANT REDESIGN REQUEST — DO NOT JUST MODIFY THE EXISTING SECTIONS.
+
+The current implementation looks visually nice but it behaves too much like a collection of static 2-column tiles.
+
+That is NOT the experience I want.
+
+I want NIDOR to feel like a cinematic, interactive luxury fragrance website where SCROLLING IS THE PRIMARY INTERACTION.
+
+Think:
+- luxury perfume campaign
+- premium editorial website
+- Apple-style product storytelling
+- Awwwards-style scroll animation
+- cinematic product presentation
+
+The website should feel alive while scrolling.
+
+DO NOT replace the supplied perfume images or NIDOR logo.
+Use the exact uploaded assets.
+
+==================================================
+CORE INTERACTION PRINCIPLE
+==================================================
+
+Each fragrance should have a LONG scroll-driven storytelling experience.
+
+Do NOT make each fragrance a simple static 50/50 image + text section.
+
+Each fragrance should have approximately 1500–2500px of scrollable storytelling space.
+
+During that scroll sequence, the perfume image should remain visually important and change position, scale, rotation and depth based on scroll progress.
+
+Use GSAP + ScrollTrigger if necessary.
+
+Keep all animations client-side and lightweight enough for Replit Free.
+
+==================================================
+FRAGRANCE EXPERIENCE
+==================================================
+
+For every fragrance create a reusable component:
+
+<FragranceExperience />
+
+The component receives:
+
+- product image
+- fragrance name
+- theme colors
+- description
+- notes
+- product number
+
+and creates a cinematic scroll sequence.
+
+==================================================
+HAWAS GOLD DIGGER EXAMPLE
+==================================================
+
+Start with a warm ivory/champagne transition from the previous section.
+
+1. INTRO
+
+Show:
+
+01 / THE WORLD OF HAWAS GOLD DIGGER
+
+HAWAS GOLD DIGGER
+
+The bottle begins smaller and slightly distant.
+
+As the user scrolls:
+
+- bottle fades in
+- bottle scales from approximately 0.65 to 1.0
+- bottle moves vertically upward
+- subtle shadow appears
+- background slowly changes from ivory to deep blue
+
+DO NOT immediately show all the information.
+
+Build anticipation.
+
+--------------------------------------------------
+
+2. BOTTLE MOVEMENT
+
+Pin the main fragrance visual during part of the scroll sequence.
+
+As the user continues scrolling:
+
+- bottle slowly rotates around the Y axis
+- bottle moves slightly left/right
+- bottle scales up and down subtly
+- camera-style zoom effect
+- subtle parallax
+- surrounding decorative elements move at different speeds
+
+IMPORTANT:
+
+Do not make the animation feel like a normal CSS hover animation.
+
+The user's scroll position should control the animation progress.
+
+Scrolling down = animation progresses.
+Scrolling up = animation reverses.
+
+--------------------------------------------------
+
+3. FRAGRANCE NOTES
+
+Introduce the fragrance notes progressively.
+
+Do NOT display them as three boring static buttons.
+
+Instead:
+
+TOP NOTES
+
+Mandarin
+Bergamot
+Pink Pepper
+
+should appear progressively around the bottle.
+
+Example:
+
+                   MANDARIN
+                       |
+                       |
+                  [ BOTTLE ]
+                 /
+        BERGAMOT
+
+                       \
+                    PINK PEPPER
+
+The exact layout can be adapted responsively.
+
+The notes should fade/slide into position as the scroll progresses.
+
+Then transition them away.
+
+--------------------------------------------------
+
+4. HEART NOTES
+
+Continue scrolling.
+
+The previous notes disappear.
+
+Introduce:
+
+ORANGE BLOSSOM
+TUBEROSE
+LAVENDER
+
+Use a different visual arrangement.
+
+The bottle remains central or moves slightly to another position.
+
+--------------------------------------------------
+
+5. BASE NOTES
+
+Then reveal:
+
+CEDARWOOD
+AMBER
+PATCHOULI
+VETIVER
+
+These should feel deeper and more grounded.
+
+As these appear:
+
+- background becomes darker
+- bottle gets slightly larger
+- shadows become deeper
+- gold accents become stronger
+
+--------------------------------------------------
+
+6. PRODUCT STORY
+
+Then transition into a large editorial statement.
+
+Example:
+
+A REFINED EXPRESSION
+OF CONFIDENCE.
+
+or another final approved description.
+
+Use extremely large typography.
+
+The bottle can move to one side while the text occupies the other.
+
+--------------------------------------------------
+
+7. FINAL PRODUCT PRESENTATION
+
+At the end of the scroll sequence:
+
+Show the bottle prominently.
+
+Display:
+
+HAWAS GOLD DIGGER
+
+5 ML
+10 ML
+
+[ SELECT SIZE ]
+
+[ ADD TO CART ]
+
+But keep this visually elegant.
+
+Do not make it look like a generic Shopify product card.
+
+==================================================
+3D / ROTATION EFFECT
+==================================================
+
+I specifically want the perfume bottle to feel like it is rotating as the user scrolls.
+
+IMPORTANT TECHNICAL LIMITATION:
+
+If the supplied product image is only a single 2D image, do NOT pretend it is a true 3D model.
+
+Use a tasteful simulated 3D presentation:
+
+- perspective
+- rotateY
+- scale
+- translate
+- shadow/parallax
+- layered lighting
+
+If a true 3D model is unavailable, prioritize a convincing cinematic product presentation over a fake-looking full 360-degree rotation.
+
+Do NOT distort the bottle unnaturally.
+
+The product image must remain recognizable and high quality.
+
+Structure the animation so that we can later replace the image with multiple product-angle images or a 3D model without rewriting the component.
+
+==================================================
+SCROLL TRANSITIONS
+==================================================
+
+This is extremely important.
+
+The entire site should continuously transition between fragrance worlds.
+
+Example:
+
+NIDOR MASTER WORLD
+IVORY / CHAMPAGNE / GOLD
+
+        ↓
+
+HAWAS GOLD DIGGER
+DEEP BLUE / ROYAL BLUE / GOLD
+
+        ↓
+
+CLUB DE NUIT WOMAN
+BLUSH / CHAMPAGNE / ROSE GOLD
+
+        ↓
+
+YARA
+SOFT PINK / ROSE / ROSE GOLD
+
+        ↓
+
+HAWAS CHROME
+SILVER / ICE / CHROME
+
+        ↓
+
+CLUB DE NUIT INTENSE MAN
+BLACK / CHARCOAL / GOLD
+
+Do NOT use abrupt section background changes.
+
+Create gradual color interpolation based on scroll progress.
+
+==================================================
+MORE DYNAMIC EFFECTS
+==================================================
+
+Add tasteful effects throughout the fragrance experiences:
+
+1. Parallax decorative lines
+
+2. Floating fragrance-related particles
+
+3. Soft light gradients
+
+4. Large oversized typography moving slowly in the background
+
+5. Product image depth/parallax
+
+6. Text entering from different directions
+
+7. Notes appearing and disappearing based on scroll
+
+8. Subtle rotation of decorative elements
+
+9. Scale/zoom transitions
+
+10. Horizontal movement during selected moments
+
+11. Mask/reveal animations
+
+12. Smooth color interpolation
+
+13. Layered shadows
+
+14. Subtle grain/noise texture if lightweight
+
+Do NOT use all effects simultaneously.
+
+Luxury design requires restraint.
+
+The animation should feel expensive, not like a gaming website.
+
+==================================================
+IMPORTANT: CREATE "SCENE" SYSTEM
+==================================================
+
+Instead of treating each fragrance as one section, treat it as multiple scenes.
+
+Example:
+
+HAWAS GOLD DIGGER
+
+Scene 01
+INTRO
+
+Scene 02
+BOTTLE REVEAL
+
+Scene 03
+TOP NOTES
+
+Scene 04
+HEART NOTES
+
+Scene 05
+BASE NOTES
+
+Scene 06
+FRAGRANCE STORY
+
+Scene 07
+PRODUCT / SIZE SELECTION
+
+Then:
+
+TRANSITION TO NEXT FRAGRANCE
+
+This architecture should be reusable for every fragrance.
+
+==================================================
+PRODUCT IMAGE BEHAVIOR
+==================================================
+
+The actual supplied image should be the hero visual.
+
+Do not put the image inside a small generic card.
+
+The product should sometimes:
+
+- occupy 40% of the screen
+- occupy 60% of the screen
+- move toward the center
+- move toward the side
+- zoom closer
+- move backwards
+- rotate slightly
+- appear behind typography
+- appear in front of decorative elements
+
+Use z-index and layering carefully.
+
+==================================================
+NAVIGATION
+==================================================
+
+The navigation should remain elegant and minimal.
+
+As the user enters each fragrance world, the navigation can subtly adapt to the current background.
+
+For example:
+
+Blue section:
+light navigation text.
+
+Pink section:
+dark navigation text.
+
+Black section:
+light navigation text.
+
+Cart should remain accessible.
+
+==================================================
+DO NOT REMOVE THE CURRENT BRAND IDENTITY
+==================================================
+
+Keep:
+
+NIDOR
+BY SCIENTISTS
+SCENTS • STORIES • YOU
+
+Keep the ivory/champagne/gold luxury identity.
+
+But make the website MUCH more interactive.
+
+==================================================
+MOBILE
+==================================================
+
+This is critical.
+
+Do not simply shrink the desktop animation.
+
+Create a mobile-specific composition.
+
+The bottle should remain large and central.
+
+Scroll animation should still work smoothly.
+
+Avoid animations that cause horizontal overflow.
+
+Respect prefers-reduced-motion.
+
+==================================================
+PERFORMANCE
+==================================================
+
+The website must remain performant.
+
+Prefer:
+
+transform
+opacity
+scale
+translate
+rotation
+
+Avoid animating expensive CSS properties unnecessarily.
+
+Do not create huge canvas effects or video backgrounds.
+
+Lazy-load images where appropriate.
+
+Do not install unnecessary packages.
+
+Use GSAP only where it materially improves the experience.
+
+==================================================
+ARCHITECTURE
+==================================================
+
+Create reusable scene-based components.
+
+Suggested:
+
+components/
+  Navbar
+  Hero
+  BrandIntro
+  CollectionPreview
+  FragranceExperience
+  FragranceScene
+  FragranceNotes
+  ProductSelector
+  TransitionSection
+  Footer
+
+data/
+  fragrances.ts
+
+Each fragrance should be data-driven.
+
+DO NOT duplicate huge blocks of animation code for every fragrance.
+
+==================================================
+FINAL QUALITY TARGET
+==================================================
+
+The final site should NOT feel like:
+
+"five product cards stacked vertically."
+
+It should feel like:
+
+"I am scrolling through five different fragrance worlds."
+
+The user should constantly feel subtle movement and progression.
+
+Every 300–600px of scroll should produce some meaningful visual change.
+
+The bottle should be one of the main characters of the experience.
+
+Do not overdo animations.
+
+The aesthetic should remain:
+
+LUXURY
+EDITORIAL
+MINIMAL
+CINEMATIC
+SOPHISTICATED
+INTERACTIVE
+
+NOT:
+
+GENERIC ECOMMERCE
+GAMING
+TECH LANDING PAGE
+EXCESSIVE GLASSMORPHISM
+EXCESSIVE ROUNDED CARDS
+CHEAP PARTICLE EFFECTS
+
+After implementing this, test the entire page by scrolling from top to bottom and ensure that the animations actually respond continuously to scroll rather than only triggering once when an element enters the viewport.

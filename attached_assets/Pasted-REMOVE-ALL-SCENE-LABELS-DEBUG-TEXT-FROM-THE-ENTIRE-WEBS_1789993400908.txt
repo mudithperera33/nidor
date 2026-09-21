@@ -1,0 +1,172 @@
+REMOVE ALL SCENE LABELS / DEBUG TEXT FROM THE ENTIRE WEBSITE
+
+There are currently visible labels such as:
+
+- Scene 1
+- Scene 2
+- Scene 3
+- Scene 4
+- Scene 5
+- Scene 6
+- Scene 7
+- Scene 8
+- Scene 8 — Order
+- scene names
+- scene numbers
+- section/debug labels
+- animation/debug indicators
+
+These must NOT be visible to the customer.
+
+IMPORTANT:
+Remove ALL visual scene/debug labels from the entire website, including:
+
+- Homepage
+- Every fragrance page
+- Every fragrance scene
+- Product/order scene
+- Collection sections
+- Mobile layout
+- Desktop layout
+
+The scene system itself must remain intact.
+
+DO NOT DELETE THE ACTUAL SCENES.
+DO NOT DELETE THEIR animations.
+DO NOT DELETE their content.
+DO NOT change the existing choreography or pacing.
+
+ONLY remove the visible development/debug labels.
+
+==================================================
+WHAT SHOULD REMAIN
+==================================================
+
+Keep actual customer-facing content such as:
+
+NIDOR
+BY SCIENTISTS
+SCENTS • STORIES • YOU
+
+Fragrance names:
+
+Rasasi Hawas Gold Digger
+Armaf Club de Nuit Woman
+Lattafa Yara
+Rasasi Hawas Chrome
+Armaf Club de Nuit Intense Man
+
+Actual headings, descriptions, notes, prices, size selectors, Add to Cart, etc. must remain.
+
+==================================================
+WHAT MUST DISAPPEAR
+==================================================
+
+Anything whose purpose is identifying the internal scene/section during development.
+
+Examples:
+
+"Scene 1"
+"Scene 2"
+"Scene 3"
+"Scene 4"
+"Scene 5"
+"Scene 6"
+"Scene 7"
+"Scene 8"
+"Scene 8 — Order"
+"scene-1"
+"scene-2"
+"scene-8"
+"SECTION 01"
+"SECTION 02"
+"DEBUG"
+"DEBUG MODE"
+"CURRENT SCENE"
+"ACTIVE SCENE"
+"SCENE INDEX"
+
+Remove these from the rendered UI.
+
+==================================================
+IMPORTANT IMPLEMENTATION
+==================================================
+
+Search the entire codebase for:
+
+"Scene"
+"scene"
+"sceneNumber"
+"sceneIndex"
+"sceneName"
+"debug"
+"DEBUG"
+"activeScene"
+"currentScene"
+
+Determine which of these are actual UI elements versus internal animation logic.
+
+REMOVE ONLY THE UI/visual rendering.
+
+DO NOT remove internal scene state if GSAP/ScrollTrigger depends on it.
+
+For example, this is fine internally:
+
+sceneIndex = 7
+
+But it must NOT render:
+
+Scene 8
+
+on the website.
+
+==================================================
+DO NOT LEAVE EMPTY LABEL CONTAINERS
+==================================================
+
+After removing the labels:
+
+- remove their visual space
+- remove their borders/backgrounds
+- remove badges
+- remove unnecessary padding/margins
+- remove any empty containers created specifically for them
+
+The customer should never know that the website is divided into numbered scenes.
+
+==================================================
+FINAL EXPERIENCE
+==================================================
+
+The website should feel like a continuous luxury fragrance experience.
+
+The user should see:
+
+CONTENT
+↓
+ANIMATION
+↓
+TRANSITION
+↓
+CONTENT
+↓
+ANIMATION
+↓
+TRANSITION
+
+NOT:
+
+Scene 1
+CONTENT
+
+Scene 2
+CONTENT
+
+Scene 3
+CONTENT
+
+The scene architecture should exist ONLY behind the scenes in the code.
+
+The customer should experience the story, not the implementation.
+
+After making the change, inspect EVERY page and EVERY scene on both desktop and mobile to make sure no scene/debug labels remain visible.

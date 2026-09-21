@@ -1,0 +1,561 @@
+GLOBAL SCENE CHOREOGRAPHY FIX — APPLY TO EVERY SINGLE SCENE
+
+The previous fix needs to be expanded.
+
+I do NOT want only Scene 1 → Scene 2 fixed.
+
+Apply the same clean transition choreography to EVERY scene transition throughout EVERY fragrance.
+
+This must be fixed at the reusable FragranceScene / FragranceExperience level so ALL fragrances automatically benefit.
+
+==================================================
+ABSOLUTE RULE
+==================================================
+
+At any moment during scrolling:
+
+ONE PRIMARY TEXT COMPOSITION ONLY.
+
+Never allow:
+- previous scene heading + next scene heading
+- previous notes + next notes
+- previous description + next description
+- previous CTA + next CTA
+- previous order information + next fragrance information
+
+to compete visually at the same time.
+
+The user should always know exactly what they are looking at.
+
+==================================================
+EVERY SCENE NEEDS 4 PHASES
+==================================================
+
+Every scene must have:
+
+1. ENTER
+2. HOLD
+3. EXIT
+4. BREATHING SPACE
+
+Then the next scene begins.
+
+Structure:
+
+SCENE A
+──────────────
+ENTER
+    ↓
+HOLD
+    ↓
+EXIT
+    ↓
+CLEAR / BREATHING SPACE
+    ↓
+SCENE B
+──────────────
+ENTER
+    ↓
+HOLD
+    ↓
+EXIT
+    ↓
+CLEAR / BREATHING SPACE
+    ↓
+SCENE C
+
+This applies to EVERY transition.
+
+Not just the first two scenes.
+
+==================================================
+ALL CURRENT SCENES
+==================================================
+
+Apply the choreography to the entire fragrance sequence:
+
+Scene 01 — Introduction
+Scene 02 — Bottle Reveal
+Scene 03 — Top Notes
+Scene 04 — Heart Notes
+Scene 05 — Base Notes
+Scene 06 — Fragrance Story
+Scene 07 — Final Product Presentation
+Scene 08 — Order Reveal
+
+And then:
+
+Scene 08
+    ↓
+FRAGRANCE TRANSITION
+    ↓
+NEXT FRAGRANCE — Scene 01
+
+Every single handoff must be clean.
+
+==================================================
+SCENE 01 → 02
+==================================================
+
+Scene 01 text fully exits.
+
+Bottle remains / continues moving.
+
+Short breathing period.
+
+Scene 02 text enters.
+
+Never overlap the two primary compositions.
+
+==================================================
+SCENE 02 → 03
+==================================================
+
+Bottle animation continues.
+
+Scene 02 text completely exits.
+
+Brief breathing space.
+
+TOP NOTES enter progressively.
+
+Do not show the previous bottle-introduction text underneath the notes.
+
+==================================================
+SCENE 03 → 04
+==================================================
+
+TOP NOTES fully leave.
+
+Do not immediately replace them with HEART NOTES.
+
+Create a short visual breathing period.
+
+Then introduce:
+
+HEART NOTES
+
+This should feel like the fragrance is evolving.
+
+==================================================
+SCENE 04 → 05
+==================================================
+
+HEART NOTES completely exit.
+
+Bottle remains as the visual continuity.
+
+Brief breathing space.
+
+Then introduce:
+
+BASE NOTES
+
+The background/theme can deepen during this transition.
+
+==================================================
+SCENE 05 → 06
+==================================================
+
+BASE NOTES completely disappear.
+
+Allow the bottle to visually dominate for a short moment.
+
+Then introduce the large editorial fragrance story.
+
+The story text should have its own uninterrupted visual moment.
+
+==================================================
+SCENE 06 → 07
+==================================================
+
+The editorial statement exits completely.
+
+Then transition into the final product presentation.
+
+Do NOT crossfade two large headlines over each other.
+
+The next composition should have room to breathe.
+
+==================================================
+SCENE 07 → 08
+==================================================
+
+Final product presentation exits or transforms cleanly.
+
+Then begin the ORDER REVEAL.
+
+The order reveal must feel like a deliberate final chapter.
+
+Bottle gradually:
+
+sharp
+↓
+slightly soft
+↓
+blurred atmospheric background
+
+Then reveal:
+
+PRODUCT NAME
+↓
+SIZE
+↓
+PRICE
+↓
+QUANTITY
+↓
+ADD TO CART
+
+Never show old scene text behind the order interface.
+
+==================================================
+FRAGRANCE A → FRAGRANCE B
+==================================================
+
+This is ALSO a scene transition.
+
+The final order scene of one fragrance must not visually collide with the introduction of the next fragrance.
+
+Example:
+
+HAWAS GOLD DIGGER
+ORDER REVEAL
+        ↓
+order interface exits
+        ↓
+blue world remains briefly
+        ↓
+blue begins transitioning toward blush
+        ↓
+brief visual breathing space
+        ↓
+CLUB DE NUIT WOMAN
+INTRODUCTION
+        ↓
+new scene begins
+
+The bottle can be used as a visual bridge.
+
+==================================================
+TEXT GROUPING
+==================================================
+
+Treat each scene's text as ONE composition.
+
+Create something conceptually like:
+
+<SceneContent>
+    <Eyebrow />
+    <Heading />
+    <Description />
+    <Notes />
+    <CTA />
+</SceneContent>
+
+Animate the SceneContent as a coordinated group.
+
+Internal elements can have subtle staggered animation.
+
+But the scene must have one overall lifecycle:
+
+ENTER → HOLD → EXIT.
+
+Do not leave individual text elements behind accidentally.
+
+==================================================
+NO "GHOST TEXT"
+==================================================
+
+There must be no ghosting.
+
+When a scene exits:
+
+- heading disappears
+- description disappears
+- notes disappear
+- eyebrow disappears
+- CTA disappears
+
+Nothing from the previous scene should remain unintentionally visible.
+
+Check especially for:
+
+opacity values
+GSAP timelines
+ScrollTrigger scrub behavior
+absolute positioning
+z-index
+stale transforms
+elements remaining at opacity > 0
+
+==================================================
+SCROLL-SCRUBBED ANIMATION
+==================================================
+
+Keep the entire system scroll-controlled.
+
+Do NOT use:
+
+onEnter → play once → stay visible
+
+for primary scene content.
+
+The scene state should be determined by scroll progress.
+
+Scrolling down:
+
+ENTER → HOLD → EXIT
+
+Scrolling up:
+
+EXIT reverses → HOLD → ENTER
+
+The experience must feel reversible and natural.
+
+==================================================
+IMPORTANT: DO NOT MAKE TRANSITIONS TOO FAST
+==================================================
+
+The current problem is not only overlap.
+
+Some transitions feel visually rushed.
+
+Give the eye time to process each scene.
+
+For each major scene:
+
+ENTER:
+slow and smooth
+
+HOLD:
+long enough to read
+
+EXIT:
+smooth and deliberate
+
+BREATHING:
+short but noticeable
+
+Do not make every scene use identical timing.
+
+Text-heavy scenes need longer holds.
+
+Simple visual scenes can move faster.
+
+==================================================
+BOTTLE CONTINUITY
+==================================================
+
+The bottle does NOT need to disappear between scenes.
+
+In fact, the bottle should often remain continuously present.
+
+This is how we avoid making the website feel like separate slides.
+
+Example:
+
+Scene 03:
+Bottle center
+
+Scene 04:
+Bottle slowly moves right
+
+Scene 05:
+Bottle slowly moves left
+
+Scene 06:
+Bottle becomes larger
+
+Scene 07:
+Bottle becomes hero
+
+Scene 08:
+Bottle blurs into background
+
+The bottle becomes the continuous visual thread.
+
+==================================================
+TEXT + BOTTLE COLLISION
+==================================================
+
+Continue respecting the existing text-safe zones.
+
+The bottle may move dramatically.
+
+But primary text must remain readable.
+
+If a bottle movement would cross the primary text area:
+
+- adjust the bottle's animation path
+OR
+- adjust the text's position slightly
+OR
+- temporarily reduce bottle scale
+
+Do NOT sacrifice readability.
+
+Do NOT permanently shrink the bottle.
+
+==================================================
+DECORATIVE ELEMENTS
+==================================================
+
+Decorative elements can continue moving during transitions.
+
+These can overlap scenes because they are secondary visual elements.
+
+Examples:
+
+- gold lines
+- particles
+- gradients
+- atmospheric lighting
+- background typography
+
+However, they must remain subtle.
+
+The hierarchy should always be:
+
+1. Primary text
+2. Product bottle
+3. Supporting text
+4. Decorative elements
+
+==================================================
+ORDER REVEAL
+==================================================
+
+The final order reveal follows the same choreography.
+
+Previous scene:
+COMPLETELY EXITS
+
+Then:
+
+BOTTLE SHARP
+    ↓
+BOTTLE SOFTENS
+    ↓
+BOTTLE BLURS
+    ↓
+ORDER INFORMATION ENTERS
+
+Order information itself should also be sequenced:
+
+PRODUCT NAME
+    ↓
+SIZE SELECTOR
+    ↓
+PRICE
+    ↓
+QUANTITY
+    ↓
+ADD TO CART
+
+Do not reveal all of these simultaneously.
+
+==================================================
+REUSABLE ARCHITECTURE
+==================================================
+
+Do NOT manually patch each fragrance.
+
+Fix the reusable scene engine.
+
+Create a scene configuration system.
+
+Conceptually:
+
+{
+  id: "top-notes",
+  enter: {...},
+  hold: {...},
+  exit: {...},
+  gap: {...}
+}
+
+The exact implementation is up to you.
+
+The important thing is that every scene follows the same choreography.
+
+All five fragrances must use the same underlying system.
+
+==================================================
+TEST ALL FIVE FRAGRANCES
+==================================================
+
+After implementing, manually scroll through the COMPLETE experience for:
+
+1. Hawas Gold Digger
+2. Club de Nuit Woman
+3. Yara
+4. Hawas Chrome
+5. Club de Nuit Intense Man
+
+Test EVERY transition:
+
+01 → 02
+02 → 03
+03 → 04
+04 → 05
+05 → 06
+06 → 07
+07 → 08
+08 → NEXT FRAGRANCE
+
+Then scroll BACKWARD and verify the reverse transitions.
+
+==================================================
+FINAL VISUAL TARGET
+==================================================
+
+The experience should feel like a cinematic fragrance film.
+
+Not:
+
+TEXT 1
+TEXT 2
+TEXT 3
+TEXT 4
+
+appearing on top of each other.
+
+Instead:
+
+SCENE 1
+    ↓
+clean exit
+    ↓
+breathing space
+    ↓
+SCENE 2
+    ↓
+clean exit
+    ↓
+breathing space
+    ↓
+SCENE 3
+    ↓
+clean exit
+    ↓
+...
+
+The bottle provides continuity.
+
+The text provides storytelling.
+
+The background provides atmosphere.
+
+The scroll controls the entire experience.
+
+KEEP the currently approved:
+- typography
+- bottle positioning
+- 3D PNG assets
+- bottle animations
+- color transitions
+- overall design
+- order reveal concept
+
+ONLY improve the choreography and separation between ALL scenes.

@@ -1,0 +1,379 @@
+==================================================
+12. END-OF-FRAGRANCE ORDER REVEAL
+==================================================
+
+Add a dedicated final scene to EVERY fragrance experience.
+
+This scene happens at the END of the fragrance's scroll sequence, immediately before transitioning to the next fragrance world.
+
+The purpose is to transition from:
+
+FRAGRANCE STORY
+        ↓
+PRODUCT EXPERIENCE
+        ↓
+ORDER / PURCHASE
+
+Do NOT simply show a normal ecommerce card.
+
+Create a cinematic order reveal.
+
+--------------------------------------------------
+START OF ORDER REVEAL
+--------------------------------------------------
+
+As the user reaches the final portion of the fragrance scroll:
+
+1. The perfume bottle remains visible in the background.
+
+2. Slowly reduce the bottle's visual sharpness using a smooth blur animation.
+
+For example:
+
+blur(0px)
+      ↓
+blur(4px)
+      ↓
+blur(8px)
+      ↓
+blur(12px)
+
+The blur should happen gradually as the user scrolls.
+
+DO NOT instantly blur the image.
+
+The bottle should remain recognizable as a soft background visual.
+
+--------------------------------------------------
+3. DARKEN / SOFTEN THE BACKGROUND
+--------------------------------------------------
+
+As the bottle blurs:
+
+- reduce its opacity slightly
+- soften its contrast
+- add a subtle overlay if necessary
+- maintain the fragrance's existing color theme
+
+The purpose is to create visual depth.
+
+The bottle becomes the background atmosphere.
+
+The order information becomes the foreground focus.
+
+--------------------------------------------------
+4. FULL ORDER INFORMATION REVEAL
+--------------------------------------------------
+
+As the bottle becomes blurred, reveal a clean centered ordering interface.
+
+Example structure:
+
+--------------------------------------------
+
+        HAWAS GOLD DIGGER
+
+        A refined expression
+        of confidence.
+
+        5 ML          10 ML
+        ─────         ─────
+
+        [ 5 ML ]      [ 10 ML ]
+
+        Quantity
+        −     1     +
+
+        Rs. XXXX
+
+        [ ADD TO CART ]
+
+--------------------------------------------
+
+The exact price should come from the fragrance data.
+
+DO NOT invent prices.
+
+Use the existing fragrance data structure so prices can be added later.
+
+--------------------------------------------------
+5. REVEAL ANIMATION
+--------------------------------------------------
+
+The order interface should NOT simply appear.
+
+Animate it progressively as the bottle blurs.
+
+Suggested sequence:
+
+Bottle begins blurring
+        ↓
+Fragrance name appears
+        ↓
+Description appears
+        ↓
+Size selector appears
+        ↓
+Quantity selector appears
+        ↓
+Price appears
+        ↓
+ADD TO CART button appears
+
+Each element should have a subtle:
+
+opacity
++
+translateY
++
+scale
+
+animation.
+
+Keep the animation elegant and slow.
+
+--------------------------------------------------
+6. FULL-SCREEN FOCUS
+--------------------------------------------------
+
+At this point the ordering interface should occupy the main visual focus of the viewport.
+
+The user should not need to scroll through another large amount of content just to find the purchase controls.
+
+Create a clear "decision moment."
+
+The user has just experienced the fragrance.
+
+Now they can choose:
+
+5 ML
+or
+10 ML
+
+and add it to the cart.
+
+--------------------------------------------------
+7. BOTTLE SHOULD STILL EXIST
+--------------------------------------------------
+
+IMPORTANT:
+
+Do NOT remove the perfume bottle completely.
+
+The bottle should remain behind the order interface as a blurred atmospheric visual.
+
+For example:
+
+                [ blurred bottle ]
+
+                       ↓
+
+             HAWAS GOLD DIGGER
+
+             Choose your size
+
+              5 ML     10 ML
+
+                Rs. XXXX
+
+              ADD TO CART
+
+This creates depth and keeps the product visually present.
+
+--------------------------------------------------
+8. SIZE SELECTION
+--------------------------------------------------
+
+Create a premium size selector.
+
+5 ML and 10 ML should be clearly selectable.
+
+Selected state should use the fragrance's accent color.
+
+Example:
+
+5 ML        10 ML
+────        ────
+selected
+
+The selector should feel like part of the NIDOR design system, NOT a generic ecommerce dropdown.
+
+--------------------------------------------------
+9. ADD TO CART
+--------------------------------------------------
+
+The ADD TO CART button should be prominent but elegant.
+
+Use the fragrance's theme.
+
+Examples:
+
+Gold Digger:
+deep blue + gold
+
+Club de Nuit Woman:
+blush + rose gold
+
+Yara:
+pink + rose gold
+
+Hawas Chrome:
+silver + chrome
+
+Club de Nuit Intense Man:
+black + gold
+
+The button should have a subtle hover interaction.
+
+On click:
+
+- button gives visual confirmation
+- item is added to cart
+- cart indicator updates
+- do not navigate away immediately
+
+We will connect the actual cart/database later.
+
+--------------------------------------------------
+10. TRANSITION TO NEXT FRAGRANCE
+--------------------------------------------------
+
+After the order reveal scene:
+
+The user continues scrolling.
+
+The current fragrance's order interface gradually fades.
+
+The blurred bottle/background color transitions into the next fragrance's color world.
+
+Example:
+
+GOLD DIGGER
+deep blue
+     ↓
+     ↓ smooth color transition
+     ↓
+CLUB DE NUIT WOMAN
+blush pink
+
+Do NOT abruptly switch colors.
+
+The next fragrance experience should then begin.
+
+--------------------------------------------------
+11. IMPORTANT SCROLL BEHAVIOR
+--------------------------------------------------
+
+The entire order reveal should remain scroll-controlled.
+
+Do NOT trigger everything immediately when the section enters the viewport.
+
+The user's scroll position should control:
+
+- bottle blur
+- bottle opacity
+- background transition
+- order panel opacity
+- text movement
+- size selector appearance
+- price appearance
+- CTA appearance
+
+Scrolling backward should reverse the entire sequence smoothly.
+
+--------------------------------------------------
+12. ORDER REVEAL VISUAL HIERARCHY
+--------------------------------------------------
+
+At this point the hierarchy should be:
+
+1. PRODUCT NAME
+2. SIZE SELECTION
+3. PRICE
+4. ADD TO CART
+5. supporting information
+6. blurred bottle
+
+The bottle is still visually important, but the ordering interface is now the primary focus.
+
+--------------------------------------------------
+13. RESPONSIVE BEHAVIOR
+--------------------------------------------------
+
+Desktop:
+
+Use the blurred bottle as a large background/side visual while keeping the order interface clearly readable.
+
+Mobile:
+
+The bottle can remain behind the interface but should be more heavily blurred and slightly reduced in opacity so that the order controls remain completely readable.
+
+Never allow the bottle to cover:
+
+- fragrance name
+- size selector
+- price
+- quantity
+- ADD TO CART
+
+--------------------------------------------------
+14. PERFORMANCE
+--------------------------------------------------
+
+Prefer GPU-friendly animations.
+
+Use:
+
+transform
+opacity
+filter: blur()
+
+where appropriate.
+
+Do not animate expensive properties unnecessarily.
+
+If animating blur continuously causes performance problems, use a lighter blur range and prioritize smooth scrolling.
+
+--------------------------------------------------
+15. FINAL EXPERIENCE
+--------------------------------------------------
+
+The end of every fragrance should feel like:
+
+"I've just experienced this fragrance."
+
+        ↓
+
+The bottle slowly softens and blurs.
+
+        ↓
+
+"The product details emerge."
+
+        ↓
+
+"Now I choose my size."
+
+        ↓
+
+"ADD TO CART."
+
+        ↓
+
+The world transitions into the next fragrance.
+
+This should feel like a cinematic conclusion to each fragrance chapter, NOT a generic ecommerce product card.
+
+==================================================
+IMPORTANT
+==================================================
+
+Do not modify the currently approved:
+
+- bottle positioning
+- bottle normalization
+- scroll transitions
+- fragrance color transitions
+- typography improvements
+
+Only add this final ORDER REVEAL scene to each fragrance experience.

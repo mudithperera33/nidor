@@ -1,0 +1,302 @@
+TYPOGRAPHY + READABILITY PASS ONLY
+
+The current bottle positioning and scroll transitions are now PERFECT.
+
+DO NOT change:
+- scroll transitions
+- fragrance color transitions
+- bottle positioning
+- bottle scale
+- bottle animation
+- section order
+- overall visual concept
+
+The problem now is typography.
+
+The fonts currently feel too small, too thin, and too weak for the cinematic luxury fragrance experience.
+
+Also, when the large perfume images appear, some text becomes difficult or impossible to read because the image overlaps the text.
+
+Fix ONLY these issues.
+
+==================================================
+1. MAKE TYPOGRAPHY MUCH MORE PROMINENT
+==================================================
+
+Increase the visual hierarchy substantially.
+
+The major fragrance headings should be LARGE and confident.
+
+Current headings are too small/thin.
+
+For desktop:
+
+Fragrance section eyebrow:
+- approximately 13–16px
+- slightly increased letter spacing
+- readable contrast
+
+Main fragrance title:
+- approximately 72–110px depending on viewport
+- strong visual weight
+- tight line height
+- should dominate the text area
+
+Large editorial statements:
+- approximately 80–130px where appropriate
+- strong contrast
+- should feel like luxury campaign typography
+
+Body text:
+- approximately 17–20px
+- line-height around 1.5–1.7
+- maximum readable width around 500–600px
+
+Notes:
+- approximately 16–20px
+- clearly readable
+- slightly increased weight
+
+Buttons:
+- approximately 13–15px
+- strong enough to be readable
+- adequate padding
+
+Do not make EVERYTHING huge.
+Maintain a clear hierarchy.
+
+==================================================
+2. FONT WEIGHT
+==================================================
+
+The current typography is too thin.
+
+Increase font weights where appropriate.
+
+Main headings should feel substantial and premium.
+
+Use:
+- 500–600 for important serif display text where supported
+- 500–600 for navigation/labels
+- 400–500 for body copy
+
+Avoid extremely thin 200–300 weights.
+
+Do NOT make the website look like a bold corporate website.
+
+The target is:
+
+LUXURY EDITORIAL
+not
+THIN MINIMALIST TEXT
+
+==================================================
+3. TEXT MUST NEVER DISAPPEAR BEHIND THE BOTTLE
+==================================================
+
+This is extremely important.
+
+The current perfume image sometimes comes in front of the text and makes the text unreadable.
+
+The text must ALWAYS remain readable.
+
+Do NOT simply remove the bottle animation.
+
+Instead, intelligently compose the layers.
+
+Use a structure such as:
+
+FragranceExperience
+ ├── BackgroundLayer
+ ├── DecorativeLayer
+ ├── ProductLayer
+ └── ContentLayer
+
+The ContentLayer should remain above the product image where text needs to be read.
+
+Use appropriate z-index values.
+
+However, do NOT simply put ALL text permanently above everything.
+
+The product can still overlap decorative elements and secondary visual elements.
+
+The priority is:
+
+IMPORTANT TEXT > PRODUCT OVERLAP
+
+==================================================
+4. CREATE A SAFE TEXT ZONE
+==================================================
+
+For desktop fragrance scenes:
+
+Reserve a clear text area.
+
+Approximately:
+
+LEFT 40–45% = TEXT
+RIGHT 55–60% = PRODUCT
+
+or reverse it depending on the scene.
+
+The bottle can move across the composition, but it should not obscure the main heading, description, notes, or CTA.
+
+If the bottle animation approaches the text area, dynamically move/reposition the text slightly or reduce the product scale temporarily.
+
+Do NOT permanently shrink the bottle just to solve this.
+
+==================================================
+5. ADD CONTRAST WHEN NECESSARY
+==================================================
+
+When text is placed over a colored/image-heavy area, increase readability using subtle techniques.
+
+Allowed:
+
+- subtle text shadow
+- subtle gradient behind text
+- translucent soft backdrop
+- darker/lighter text depending on background
+- slight background blur behind text if necessary
+
+Do NOT use obvious giant rectangular text boxes.
+
+Do NOT add ugly black overlays everywhere.
+
+The design must remain premium.
+
+==================================================
+6. FRAGRANCE-SPECIFIC TEXT COLORS
+==================================================
+
+Maintain the current fragrance worlds.
+
+HAWAS GOLD DIGGER:
+Deep blue background → use ivory/white text with gold accents.
+
+CLUB DE NUIT WOMAN:
+Blush/champagne → use dark charcoal text with rose-gold accents.
+
+YARA:
+Soft pink → use dark charcoal/deep brown text.
+
+HAWAS CHROME:
+Silver/ice → use dark charcoal text.
+
+CLUB DE NUIT INTENSE MAN:
+Black/charcoal → use ivory/white text with gold accents.
+
+Make sure contrast meets normal readability standards.
+
+==================================================
+7. MOBILE TYPOGRAPHY
+==================================================
+
+Do NOT simply scale desktop typography down.
+
+Create intentional mobile sizes.
+
+Suggested:
+
+Main headings:
+44–64px
+
+Body:
+16–18px
+
+Notes:
+15–18px
+
+Eyebrows:
+11–13px
+
+Buttons:
+13–15px
+
+The main heading should still feel dramatic on mobile.
+
+==================================================
+8. PRODUCT IMAGE + TYPOGRAPHY COMPOSITION
+==================================================
+
+The bottle is now a major visual hero.
+
+The typography should work AROUND it.
+
+For example:
+
+        HAWAS
+        GOLD
+        DIGGER
+
+        Refined confidence
+        captured in a scent.
+
+             [BOTTLE]
+
+rather than:
+
+        [TEXT]
+              [BOTTLE]
+        [TEXT hidden behind bottle]
+
+Create intentional negative space between text and product.
+
+==================================================
+9. SCROLL ANIMATION MUST REMAIN
+==================================================
+
+Do not remove the existing scroll-controlled typography animations.
+
+Keep:
+- fade-ins
+- text movement
+- note reveals
+- scale transitions
+- scene transitions
+
+But make the resulting text larger and easier to read.
+
+If an animation currently causes text to cross behind the bottle, adjust the animation coordinates so the text remains inside its safe zone.
+
+==================================================
+10. DESKTOP QUALITY TARGET
+==================================================
+
+At a normal 1440×900 desktop viewport:
+
+The user should immediately be able to read:
+
+FRAGRANCE NAME
+MAIN HEADLINE
+DESCRIPTION
+NOTES
+CTA
+
+without zooming in.
+
+The fragrance name and headline should be readable from a distance.
+
+==================================================
+11. DO NOT REDESIGN
+==================================================
+
+This is NOT a redesign.
+
+The current design direction is approved.
+
+This is a:
+
+TYPOGRAPHY
++
+READABILITY
++
+LAYERING
++
+COMPOSITION
+
+pass only.
+
+Before finishing, scroll through every fragrance and verify that no important text becomes unreadable when the bottle enters the scene.
+
+Test both desktop and mobile.

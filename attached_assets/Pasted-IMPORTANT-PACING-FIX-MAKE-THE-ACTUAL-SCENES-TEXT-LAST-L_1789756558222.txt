@@ -1,0 +1,320 @@
+IMPORTANT PACING FIX — MAKE THE ACTUAL SCENES/TEXT LAST LONGER
+
+The current transitions are clean, but the pacing is wrong:
+- Text appears for too short a time
+- The user scrolls through too much empty space between scenes
+- There is too much "nothing happening" scroll
+- The actual fragrance scenes need to feel longer, richer, and more immersive
+
+DO NOT redesign anything.
+DO NOT change the approved bottle positioning.
+DO NOT change typography, colors, themes, layouts, or existing visual effects.
+DO NOT bring back overlapping text.
+
+ONLY FIX THE SCROLL PACING AND SCENE TIMING.
+
+CORE RULE:
+The majority of each fragrance's scroll distance should be spent INSIDE an active scene, with the text and visual composition visible.
+
+The transition between scenes should be SHORT.
+
+Target feeling:
+SCENE → long readable HOLD → short transition → next SCENE → long readable HOLD → short transition → next SCENE
+
+NOT:
+SCENE → long empty scroll → transition → empty scroll → next SCENE
+
+
+1. MAKE TEXT HOLD MUCH LONGER
+
+For every scene containing text:
+
+- Increase the amount of scroll during which the text is fully visible.
+- Once the text has entered its final position, keep it there for a substantial portion of the scene.
+- The user should have enough time to comfortably read the heading, description, and notes before they begin disappearing.
+- Text should NOT immediately start exiting after entering.
+
+Target choreography:
+
+ENTER: ~15%
+HOLD: ~70%
+EXIT: ~10%
+TRANSITION/BREATHING: ~5%
+
+The HOLD is the important part.
+
+The text should feel intentionally placed and stable rather than constantly moving.
+
+
+2. SHORTEN EMPTY TRANSITIONS
+
+The current implementation has too much scroll where essentially nothing happens.
+
+Reduce the "breathing space" between scenes significantly.
+
+Transitions should generally take only a small portion of the scroll distance.
+
+A transition should feel like:
+
+last scene fades/moves away
+→ bottle/background provides a visual bridge
+→ next scene begins
+
+It should NOT feel like:
+
+last scene disappears
+→ several hundred pixels of empty scrolling
+→ nothing happens
+→ next scene finally appears
+
+
+3. MAKE EACH SCENE A REAL SCROLL CHAPTER
+
+Each scene should have enough scroll distance for:
+
+A. ENTER
+The composition comes into view.
+
+B. HOLD
+The composition remains stable and readable for a long time.
+
+C. SUBTLE VISUAL MOTION DURING HOLD
+While text is held, the bottle can continue extremely subtle movement:
+- slight scale
+- subtle rotation
+- slow parallax
+- background movement
+- light/shadow movement
+- decorative element movement
+
+This makes the scene feel alive without changing the readable text composition.
+
+D. EXIT
+Only near the end should the current scene begin leaving.
+
+The bottle can act as the continuous visual thread between scenes.
+
+
+4. PRIORITIZE CONTENT OVER TRANSITIONS
+
+Allocate approximately:
+
+80–90% of scroll distance:
+ACTIVE SCENE / TEXT / VISUAL STORY
+
+10–20%:
+SCENE TRANSITIONS
+
+Do NOT allocate large portions of the scroll to empty breathing space.
+
+The user should almost always be experiencing something visually meaningful while scrolling.
+
+
+5. IMPORTANT — DO NOT SIMPLY MAKE THE WHOLE SECTION LONGER
+
+Do NOT solve this by adding a huge amount of blank scroll space.
+
+Instead, redistribute the existing scroll distance so that:
+
+TEXT HOLD TIME ↑↑
+SCENE CONTENT TIME ↑↑
+EMPTY TRANSITION TIME ↓↓
+
+
+6. TEXT SHOULD STAY VISIBLE LONG ENOUGH TO READ
+
+For each major text composition:
+
+- Heading enters
+- Supporting text enters
+- Notes/details enter
+- EVERYTHING remains visible together
+- Hold this composition for a long scroll interval
+- Then begin the exit
+
+Do not have the heading disappear while the description is still entering.
+
+Keep the entire composition synchronized.
+
+The user should be able to comfortably read the complete scene without rushing.
+
+
+7. FRAGRANCE NOTE SCENES
+
+For top / heart / base notes:
+
+Give each note section a substantial hold.
+
+Example:
+
+TOP NOTES
+    ↓
+heading + note names appear
+    ↓
+LONG HOLD
+    ↓
+bottle subtly moves
+    ↓
+background/decorative elements subtly animate
+    ↓
+LONG HOLD
+    ↓
+exit
+    ↓
+SHORT TRANSITION
+    ↓
+HEART NOTES
+
+The same applies to HEART and BASE.
+
+
+8. BOTTLE MOVEMENT
+
+Do NOT freeze the bottle completely during the text hold.
+
+Keep the bottle visually alive with subtle scroll-linked movement.
+
+However:
+
+TEXT = stable
+BOTTLE = subtle continuous movement
+
+This gives the scene cinematic motion without making the content feel rushed.
+
+
+9. ORDER REVEAL
+
+Apply the same principle to the final order scene.
+
+The product/order interface needs a long readable hold.
+
+Sequence:
+
+Bottle gradually becomes atmospheric
+        ↓
+Fragrance name appears
+        ↓
+5 ml / 10 ml selector appears
+        ↓
+Quantity appears
+        ↓
+Price appears
+        ↓
+Add to cart appears
+        ↓
+LONG HOLD
+        ↓
+User has time to actually interact/read
+        ↓
+Only then transition onward
+
+Do NOT make the order UI appear and disappear quickly.
+
+
+10. FRAGRANCE-TO-FRAGRANCE TRANSITIONS
+
+Keep these transitions short.
+
+When one fragrance ends and the next begins:
+
+Current fragrance exits
+        ↓
+VERY SHORT visual bridge
+        ↓
+Next fragrance enters
+
+Do not create large empty scroll gaps between fragrance worlds.
+
+The next fragrance should arrive relatively quickly after the previous one finishes.
+
+
+11. SCROLLTRIGGER / GSAP
+
+If the scene system uses GSAP ScrollTrigger or a similar timeline:
+
+Do not increase the overall section height just to create longer scenes.
+
+Instead, redistribute timeline progress toward the active scene.
+
+For example, conceptually:
+
+0.00–0.15  ENTER
+0.15–0.85  HOLD
+0.85–0.95  EXIT
+0.95–1.00  TRANSITION
+
+The exact implementation can differ, but preserve this ratio.
+
+If scenes currently have excessive empty timeline segments, reduce those segments.
+
+If the current implementation has separate spacer/pause scenes, remove or greatly reduce them.
+
+
+12. RESPONSIVE BEHAVIOR
+
+Apply the same pacing philosophy on mobile.
+
+Mobile can have slightly more scroll distance because text occupies more vertical space, but do NOT introduce huge blank gaps.
+
+The user should still experience:
+
+LONG CONTENT HOLD
+→ SHORT TRANSITION
+→ LONG CONTENT HOLD
+
+
+13. FINAL QUALITY CHECK
+
+Scroll through the entire website manually.
+
+For EVERY scene ask:
+
+"Does the user get enough time to comfortably read this?"
+
+If NO:
+increase the scene's HOLD duration.
+
+Then ask:
+
+"Is there unnecessary scrolling where almost nothing is happening?"
+
+If YES:
+reduce that transition/breathing segment.
+
+The desired experience is:
+
+LONG
+RICH
+READABLE
+IMMERSIVE
+CINEMATIC
+
+scene
+
+↓
+
+SHORT
+SMOOTH
+VISUAL
+
+transition
+
+↓
+
+LONG
+RICH
+READABLE
+IMMERSIVE
+
+scene
+
+Repeat this throughout every fragrance.
+
+IMPORTANT:
+Preserve the existing scene choreography that already fixed the text overlap problem.
+
+Do NOT reintroduce overlapping scenes.
+
+Do NOT change the visual design.
+
+This is strictly a PACING / TIMELINE DISTRIBUTION fix.

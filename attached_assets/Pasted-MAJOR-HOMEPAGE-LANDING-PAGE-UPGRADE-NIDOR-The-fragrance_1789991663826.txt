@@ -1,0 +1,772 @@
+MAJOR HOMEPAGE / LANDING PAGE UPGRADE — NIDOR
+
+The fragrance pages are now looking good and cinematic.
+
+The PROBLEM:
+The initial NIDOR landing page still feels too basic compared with the fragrance experiences.
+
+Currently it feels like:
+LOGO
++
+STATIC HERO
++
+SCROLL INTO PRODUCTS
+
+I want the homepage itself to feel like the beginning of the same premium fragrance experience.
+
+IMPORTANT:
+Do NOT change the existing fragrance pages.
+Do NOT change their approved bottle positioning.
+Do NOT change their scene choreography.
+Do NOT change their typography system.
+Do NOT change their existing pacing.
+
+ONLY redesign the START / LANDING EXPERIENCE before the first fragrance.
+
+I will add:
+1. The official NIDOR logo
+2. One additional wide horizontal landscape image
+
+Use those exact assets.
+Do NOT generate replacement logos.
+Do NOT recreate the logo with text.
+Do NOT generate an artificial replacement for my landscape image.
+
+==================================================
+OVERALL HOMEPAGE CONCEPT
+==================================================
+
+The homepage should feel like:
+
+NIDOR
+SCENTS • STORIES • YOU
+
+→ introduction
+→ visual atmosphere
+→ philosophy
+→ collection reveal
+→ five fragrances introduced
+→ transition into the first fragrance world
+
+It should feel like a luxury fragrance campaign / editorial website.
+
+NOT a normal ecommerce homepage.
+
+NOT a static centered logo.
+
+NOT a product grid.
+
+The homepage itself should be SCROLL-DRIVEN.
+
+
+==================================================
+SCROLL EXPERIENCE
+==================================================
+
+Make the entire homepage a cinematic sequence controlled by scrolling.
+
+Scrolling should progressively transform the page.
+
+The logo, landscape image, typography, background, and collection should move/change based on scroll.
+
+The user should feel that they are travelling INTO the NIDOR world.
+
+
+==================================================
+SCENE 1 — NIDOR OPENING
+==================================================
+
+Start extremely minimal.
+
+Background:
+NIDOR ivory / champagne cream.
+
+Place the official NIDOR logo prominently.
+
+Do NOT make it simply sit statically in the center.
+
+On scroll:
+
+- logo slowly scales down
+- logo subtly moves upward
+- background lighting subtly changes
+- extremely subtle gold/champagne particles or atmospheric texture can appear
+- small "SCENTS • STORIES • YOU" typography can gradually appear
+- a subtle scroll indicator can disappear as the user begins scrolling
+
+The logo should feel like it is opening the campaign.
+
+
+==================================================
+SCENE 2 — LOGO TRANSFORMATION
+==================================================
+
+As the user continues scrolling:
+
+The logo becomes smaller and transitions from:
+
+BRAND INTRODUCTION
+
+into:
+
+BRAND PRESENCE
+
+Possible choreography:
+
+LOGO
+↓
+slow scale down
+↓
+slight upward movement
+↓
+tagline appears
+↓
+tagline holds
+↓
+logo becomes part of the composition rather than disappearing instantly
+
+Keep everything elegant and slow.
+
+No aggressive animations.
+
+
+==================================================
+SCENE 3 — LANDSCAPE IMAGE REVEAL
+==================================================
+
+Now introduce the wide landscape image that I will upload.
+
+The image should NOT simply appear as a normal rectangular website image.
+
+Make it cinematic.
+
+On scroll:
+
+- image gradually reveals
+- image expands horizontally
+- subtle scale / zoom
+- subtle parallax
+- slight movement relative to foreground typography
+- optional soft mask / clipping transition
+- image can initially appear narrow and expand toward full width
+- eventually allow it to occupy a large portion of the viewport
+
+The image should feel like a visual memory / atmosphere rather than a normal banner.
+
+IMPORTANT:
+Preserve the original image quality and aspect ratio.
+
+Do NOT crop important parts aggressively.
+
+
+==================================================
+SCENE 4 — NIDOR PHILOSOPHY
+==================================================
+
+As the landscape image is visible, introduce NIDOR's identity.
+
+Use large editorial typography:
+
+SCENTS
+STORIES
+YOU
+
+But do NOT show everything at once.
+
+Reveal the words progressively with scrolling.
+
+Example:
+
+SCENTS
+↓
+hold
+↓
+STORIES
+↓
+hold
+↓
+YOU
+
+Each word can occupy a different position on screen.
+
+Use subtle parallax and typography movement.
+
+Keep text extremely readable.
+
+The typography should feel like a luxury editorial campaign.
+
+
+==================================================
+SCENE 5 — "FIND YOUR SCENT"
+==================================================
+
+Transition into the collection.
+
+Introduce a statement such as:
+
+FIND YOUR SCENT.
+
+Then supporting copy:
+
+Five fragrances.
+Five different worlds.
+One collection by NIDOR.
+
+Keep the wording elegant and concise.
+
+Do NOT make it sound like generic ecommerce marketing.
+
+The scene should hold long enough for the user to read everything comfortably.
+
+
+==================================================
+SCENE 6 — COLLECTION REVEAL
+==================================================
+
+Now reveal that NIDOR has five fragrances.
+
+Do NOT immediately show five static product cards.
+
+Instead, reveal the five fragrances progressively.
+
+The five products:
+
+1. Rasasi Hawas Gold Digger
+2. Armaf Club de Nuit Woman
+3. Lattafa Yara
+4. Rasasi Hawas Chrome
+5. Armaf Club de Nuit Intense Man
+
+Use their exact bottle PNG assets already present in the project.
+
+Each bottle should enter as a visual object.
+
+Example choreography:
+
+Bottle 1 appears
+↓
+Bottle 2 enters
+↓
+Bottle 3 enters
+↓
+Bottle 4 enters
+↓
+Bottle 5 enters
+
+They can move subtly with scroll.
+
+Do NOT make them all tiny.
+
+Each bottle should remain visually recognizable.
+
+
+==================================================
+SCENE 7 — FIVE FRAGRANCE WORLDS
+==================================================
+
+Introduce each fragrance with its own visual identity.
+
+When the user scrolls:
+
+Hawas Gold Digger
+→ blue / gold atmosphere
+
+Club de Nuit Woman
+→ blush / champagne / rose-gold atmosphere
+
+Lattafa Yara
+→ soft pink / rose atmosphere
+
+Hawas Chrome
+→ silver / ice / chrome / charcoal atmosphere
+
+Club de Nuit Intense Man
+→ black / charcoal / gold atmosphere
+
+The transition between them should be smooth.
+
+Do NOT fully enter the individual fragrance experience yet.
+
+This is only the collection preview.
+
+The existing fragrance pages will handle the full cinematic experience.
+
+
+==================================================
+SCENE 8 — FRAGRANCE INFORMATION
+==================================================
+
+Each fragrance preview should include useful information.
+
+Do NOT overload the screen.
+
+Use an elegant editorial layout.
+
+For each fragrance show:
+
+NAME
+BRAND
+FRAGRANCE FAMILY
+GENDER / TARGET
+CONCENTRATION where verified
+SHORT DESCRIPTION
+TOP NOTES
+HEART / MIDDLE NOTES
+BASE NOTES
+
+Also optionally show:
+
+MOOD
+OCCASION
+SEASON
+
+BUT DO NOT invent factual claims.
+
+Where official brand information is available, use that.
+
+For community-derived information such as "best season", "projection", "longevity", etc., do not present it as an objective fact unless clearly sourced.
+
+Do NOT display fake ratings.
+
+
+==================================================
+PRODUCT DATA
+==================================================
+
+Create ONE centralized fragrance data object / configuration.
+
+Do NOT hardcode information separately inside every component.
+
+Use something like:
+
+fragrances = [
+  {
+    name,
+    brand,
+    slug,
+    image,
+    family,
+    gender,
+    concentration,
+    description,
+    topNotes: [],
+    heartNotes: [],
+    baseNotes: [],
+    mood,
+    occasion,
+    season,
+    theme
+  }
+]
+
+This same data should be reusable by:
+
+- homepage
+- fragrance previews
+- individual fragrance pages
+- order sections
+- future product database / Supabase
+
+Do NOT duplicate product information across files.
+
+
+==================================================
+FRAGRANCE DATA
+==================================================
+
+1. RASASI HAWAS GOLD DIGGER
+
+Brand:
+Rasasi
+
+Name:
+Hawas Gold Digger
+
+Fragrance family:
+Woody Aromatic
+
+Gender:
+Men
+
+Top notes:
+Pear
+Mint
+Lavender
+Bergamot
+
+Heart notes:
+Cinnamon
+Sage
+
+Base notes:
+Vanilla
+Amber
+Cedarwood
+Patchouli
+
+Use this information consistently.
+
+Do not invent longevity/performance numbers.
+
+This is a 2026 fragrance, so avoid presenting community-derived claims as established facts.
+
+
+==================================================
+
+2. ARMAF CLUB DE NUIT WOMAN
+
+Brand:
+Armaf
+
+Name:
+Club de Nuit Woman
+
+Fragrance family:
+Floral
+
+Gender:
+Women
+
+Concentration:
+Eau de Parfum
+
+Top notes:
+Bergamot
+Grapefruit
+Peach
+Orange
+
+Heart notes:
+Geranium
+Jasmine
+Litchi
+Rose
+
+Base notes:
+Musk
+Patchouli
+Vanilla
+Vetiver
+
+Short editorial description:
+An elegant and feminine fragrance built around a bright fruity opening, floral heart, and warm musky-vanillic base.
+
+Official ARMAF information should be treated as the source of truth.
+
+
+==================================================
+3. LATTAFA YARA
+
+Brand:
+Lattafa
+
+Name:
+Yara
+
+Fragrance family:
+Amber Vanilla
+
+Gender:
+Women
+
+Year:
+2020
+
+Top notes:
+Tangerine
+Heliotrope
+Orchid
+
+Heart notes:
+Tropical Notes
+Gourmand
+
+Base notes:
+Vanilla
+Sandalwood
+Musk
+
+Short editorial description:
+A soft, sweet and creamy fragrance built around powdery florals, tropical-gourmand facets and a warm vanilla-musk-sandalwood base.
+
+Use the official Lattafa information as the primary source.
+
+
+==================================================
+4. RASASI HAWAS CHROME
+
+Brand:
+Rasasi
+
+Name:
+Hawas Chrome
+
+Gender:
+Unisex
+
+Top notes:
+Peach
+Sweet Orange
+Yellow Fruits
+
+Heart notes:
+Passion Fruit
+Fruits
+Mango
+Water
+
+Base notes:
+Musk
+Amber
+Vanilla
+
+Fragrance profile:
+Fruity / Amber
+
+Important:
+Hawas Chrome is a newer 2026 release.
+
+Do not invent concentration, longevity, projection or ratings if they are not verified.
+
+
+==================================================
+5. ARMAF CLUB DE NUIT INTENSE MAN
+
+Brand:
+Armaf
+
+Name:
+Club de Nuit Intense Man
+
+Fragrance family:
+Woody
+
+Gender:
+Men
+
+For the specific version being sold on NIDOR, use the correct concentration already associated with the product asset/data.
+
+Top notes:
+Apple
+Bergamot
+Blackcurrant
+Pineapple
+Lemon
+
+Heart notes:
+Rose
+Birch
+Jasmine
+
+Base notes:
+Musk
+Ambergris
+Patchouli
+Vanilla
+
+Short editorial description:
+A woody fragrance with a bright fruity-citrus opening, floral/woody heart, and warm musky-ambery base.
+
+IMPORTANT:
+Do not confuse the different Club de Nuit Intense Man versions.
+The brand sells EDT, EDP, Parfum and other variants.
+
+Use the actual NIDOR product version as the source for the concentration displayed on the website.
+
+
+==================================================
+SCENE 9 — INTERACTIVE FRAGRANCE SELECTION
+==================================================
+
+After all five fragrances have been introduced, create a highly interactive selection moment.
+
+Display the five fragrance names elegantly.
+
+As the user scrolls:
+
+- active fragrance becomes larger/brighter
+- inactive fragrances become more subtle
+- corresponding bottle becomes prominent
+- background changes toward that fragrance's theme
+- surrounding typography changes
+- subtle parallax movement occurs
+
+The user should feel like they are moving through five different scent worlds.
+
+Example:
+
+HAWAS GOLD DIGGER
+↓
+CLUB DE NUIT WOMAN
+↓
+YARA
+↓
+HAWAS CHROME
+↓
+CLUB DE NUIT INTENSE MAN
+
+
+==================================================
+SCENE 10 — ENTER THE FIRST FRAGRANCE
+==================================================
+
+End the homepage by transitioning directly into the existing first fragrance experience.
+
+The final collection composition should gradually transform into:
+
+RASASI HAWAS GOLD DIGGER
+
+Then hand off naturally to the existing fragrance Scene 1.
+
+IMPORTANT:
+
+Do NOT create a hard page break.
+
+Do NOT suddenly jump.
+
+Do NOT show an empty loading section.
+
+The homepage should feel like the opening chapter seamlessly flowing into the first fragrance.
+
+
+==================================================
+INTERACTION RULES
+==================================================
+
+Everything should be primarily scroll-driven.
+
+Use GSAP + ScrollTrigger if that is already the project's animation system.
+
+Do NOT use:
+
+setTimeout()
+setInterval()
+
+for scene timing.
+
+Scroll should control:
+
+- logo scale
+- logo position
+- image reveal
+- image scale
+- image parallax
+- text opacity
+- text position
+- background transitions
+- bottle movement
+- collection reveal
+- active fragrance
+- transition into first fragrance
+
+
+==================================================
+PACING
+==================================================
+
+IMPORTANT:
+
+Do NOT make the homepage fast.
+
+This is supposed to feel like a luxury campaign.
+
+Every important text composition needs a LONG HOLD.
+
+Target:
+
+ENTER → LONG HOLD → SHORT TRANSITION → LONG HOLD → SHORT TRANSITION
+
+Avoid:
+
+ENTER → immediately disappear → empty scroll → next scene.
+
+
+There should be very little empty scrolling.
+
+Most of the scroll should contain meaningful visual or textual content.
+
+
+==================================================
+MOBILE
+==================================================
+
+Create a genuinely responsive experience.
+
+Do NOT simply shrink the desktop homepage.
+
+On mobile:
+
+- logo remains prominent
+- landscape image remains cinematic
+- text remains readable
+- bottles remain recognizable
+- scenes can have additional scroll distance
+- interactions remain smooth
+- avoid overlapping text
+- avoid tiny product information
+
+
+==================================================
+VISUAL QUALITY
+==================================================
+
+The homepage should visually belong to the SAME DESIGN SYSTEM as the fragrance pages.
+
+Use:
+
+- ivory
+- champagne
+- black
+- subtle metallic gold
+- elegant serif display typography
+- clean sans-serif body typography
+- subtle grain
+- soft light
+- cinematic depth
+- restrained motion
+
+Gold should remain an accent.
+
+Do NOT turn the entire homepage gold.
+
+
+==================================================
+FINAL REQUIREMENT
+==================================================
+
+Before finishing, scroll through the entire site from the very beginning.
+
+The experience should feel like:
+
+NIDOR LOGO
+↓
+BRAND ATMOSPHERE
+↓
+LANDSCAPE STORY
+↓
+SCENTS • STORIES • YOU
+↓
+NIDOR PHILOSOPHY
+↓
+FIND YOUR SCENT
+↓
+5 FRAGRANCES
+↓
+5 FRAGRANCE WORLDS
+↓
+FRAGRANCE INFORMATION
+↓
+INTERACTIVE COLLECTION
+↓
+HAWAS GOLD DIGGER
+↓
+EXISTING FRAGRANCE EXPERIENCE
+
+The homepage should no longer feel like a simple landing page.
+
+It should feel like the OPENING CHAPTER of the NIDOR fragrance experience.
+
+MOST IMPORTANT:
+Preserve everything that is already working on the fragrance pages.
+
+This task is specifically to elevate the START PAGE to the same cinematic quality.

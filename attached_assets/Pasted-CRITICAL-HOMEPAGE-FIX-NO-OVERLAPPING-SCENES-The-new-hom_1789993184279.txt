@@ -1,0 +1,468 @@
+CRITICAL HOMEPAGE FIX — NO OVERLAPPING SCENES
+
+The new homepage looks good visually, BUT the scenes are overlapping during scroll.
+
+I need the homepage to behave like a CINEMATIC SEQUENCE:
+
+SCENE 1
+↓
+SCENE 1 completely exits
+↓
+SHORT TRANSITION
+↓
+SCENE 2
+↓
+SCENE 2 completely exits
+↓
+SHORT TRANSITION
+↓
+SCENE 3
+...
+
+NEVER show two primary scene compositions at the same time.
+
+==================================================
+CORE RULE
+==================================================
+
+ONLY ONE PRIMARY HOMEPAGE SCENE MAY BE VISIBLE AT A TIME.
+
+When the next scene begins entering:
+
+The previous scene MUST already be completely hidden
+OR be in the final few moments of its exit.
+
+Do NOT allow:
+
+Scene 1 text + Scene 2 text
+Scene 2 text + Scene 3 text
+Scene 3 image + Scene 4 text
+multiple fragrance information blocks
+multiple collection descriptions
+
+to remain readable simultaneously.
+
+The homepage must feel like a controlled sequence of chapters.
+
+==================================================
+USE ENTER → HOLD → EXIT → TRANSITION
+==================================================
+
+Every homepage scene must follow this exact choreography:
+
+1. ENTER
+2. FULL COMPOSITION HOLD
+3. EXIT
+4. SHORT TRANSITION
+5. NEXT SCENE ENTERS
+
+Timeline concept:
+
+0% ─────────────── 15%
+        ENTER
+
+15% ───────────────────────────── 80%
+                 HOLD
+
+80% ─────────────────── 95%
+                 EXIT
+
+95% ───────── 100%
+       SHORT TRANSITION
+
+
+Only after the previous scene has exited should the next scene become fully active.
+
+==================================================
+TEXT GROUPS MUST MOVE TOGETHER
+==================================================
+
+For every scene, treat all of its text as ONE composition.
+
+For example:
+
+SCENTS
+STORIES
+YOU
+supporting paragraph
+
+must be treated as one scene group.
+
+Do NOT allow:
+
+SCENTS from Scene A
++
+STORIES from Scene A
++
+YOU from Scene A
++
+new text from Scene B
+
+to coexist during the transition.
+
+Group each scene's elements into a single wrapper/container.
+
+Animate the GROUP rather than independently allowing each element to remain behind.
+
+==================================================
+IMPORTANT: NO GHOST TEXT
+==================================================
+
+When a scene exits:
+
+- heading fades/moves out
+- description fades/moves out
+- labels disappear
+- notes disappear
+- decorative text associated with that scene disappears
+
+Everything belonging to the scene must exit together.
+
+Do not leave previous text floating behind the next scene.
+
+==================================================
+LANDSCAPE IMAGE SCENE
+==================================================
+
+The landscape image can transition into the next scene visually, BUT:
+
+Do not allow the previous scene's text to remain visible over the next scene's text.
+
+The image can act as a visual bridge.
+
+TEXT CANNOT.
+
+For example:
+
+LANDSCAPE IMAGE
+      +
+SCENE 3 TEXT
+
+then:
+
+SCENE 3 TEXT exits completely
+
+then:
+
+SCENE 4 TEXT enters.
+
+==================================================
+FRAGRANCE COLLECTION REVEAL
+==================================================
+
+The five fragrance introduction scenes must ALSO be sequential.
+
+Do NOT show five complete information compositions simultaneously.
+
+Instead:
+
+HAWAS GOLD DIGGER
+→ fully visible
+→ long hold
+→ exits
+
+then:
+
+CLUB DE NUIT WOMAN
+→ fully visible
+→ long hold
+→ exits
+
+then:
+
+YARA
+→ fully visible
+→ long hold
+→ exits
+
+then:
+
+HAWAS CHROME
+→ fully visible
+→ long hold
+→ exits
+
+then:
+
+CLUB DE NUIT INTENSE MAN
+→ fully visible
+→ long hold
+→ exits
+
+
+==================================================
+FRAGRANCE INFORMATION
+==================================================
+
+Each fragrance's:
+
+NAME
+BRAND
+DESCRIPTION
+FRAGRANCE FAMILY
+TOP NOTES
+HEART NOTES
+BASE NOTES
+
+must belong to ONE scene composition.
+
+Do NOT let information from two fragrances overlap.
+
+The user should experience:
+
+ONE FRAGRANCE
+↓
+READ
+↓
+HOLD
+↓
+EXIT
+↓
+NEXT FRAGRANCE
+
+
+==================================================
+BOTTLES
+==================================================
+
+The bottles may be used as the continuous visual bridge between scenes.
+
+They are allowed to remain subtly visible while the text changes.
+
+However:
+
+The PRIMARY TEXT COMPOSITION must never overlap.
+
+For example:
+
+Bottle A can move toward the side
+↓
+Bottle B enters
+↓
+Bottle A becomes atmospheric
+
+But do NOT have:
+
+BOTTLE A TEXT
++
+BOTTLE B TEXT
+
+visible simultaneously.
+
+The bottle is the visual continuity.
+
+The text is the scene identity.
+
+
+==================================================
+BACKGROUND TRANSITIONS
+==================================================
+
+Background colors/gradients are allowed to transition smoothly between scenes.
+
+For example:
+
+ivory
+→ champagne
+→ blue
+→ blush
+→ pink
+
+But the background transition must NOT cause text overlap.
+
+It is fine for backgrounds to crossfade.
+
+It is NOT fine for two text compositions to crossfade for a long period.
+
+
+==================================================
+DO NOT FIX THIS BY MAKING EVERYTHING FASTER
+==================================================
+
+IMPORTANT:
+
+Do NOT simply speed up the animations.
+
+The scenes need LONG readable holds.
+
+Instead:
+
+LONG HOLD
++
+CLEAN EXIT
++
+SHORT TRANSITION
++
+NEXT SCENE
+
+The user should have plenty of time to read each scene.
+
+The problem is NOT that scenes are too slow.
+
+The problem is that their active periods overlap.
+
+
+==================================================
+DO NOT ADD EMPTY SCROLL
+==================================================
+
+Do NOT create huge blank gaps between scenes.
+
+The sequence should be:
+
+ACTIVE SCENE
+→ SHORT TRANSITION
+→ ACTIVE SCENE
+→ SHORT TRANSITION
+→ ACTIVE SCENE
+
+not:
+
+ACTIVE SCENE
+→ huge empty space
+→ ACTIVE SCENE
+
+
+==================================================
+IMPLEMENTATION
+==================================================
+
+Inspect the current homepage animation architecture.
+
+If using GSAP + ScrollTrigger:
+
+Make sure each scene has a controlled timeline/state.
+
+Conceptually:
+
+Scene A:
+ENTER → HOLD → EXIT
+
+Scene B:
+ENTER → HOLD → EXIT
+
+Scene C:
+ENTER → HOLD → EXIT
+
+Do not allow all scenes to independently animate based on the same raw scroll progress without controlling their visibility ranges.
+
+Use a centralized scene state / timeline system if necessary.
+
+Each scene should have a clearly defined active scroll range.
+
+For example:
+
+Scene 1 = 0–15%
+Scene 2 = 15–30%
+Scene 3 = 30–45%
+Scene 4 = 45–60%
+Scene 5 = 60–75%
+Scene 6 = 75–90%
+Scene 7 = 90–100%
+
+The exact percentages can differ.
+
+The important rule is:
+
+ONE PRIMARY SCENE AT A TIME.
+
+
+==================================================
+Z-INDEX IS NOT THE SOLUTION
+==================================================
+
+Do NOT solve this simply by changing z-index.
+
+The problem is not which scene is on top.
+
+The problem is that multiple scenes are still visible.
+
+Actually control:
+
+- opacity
+- visibility
+- transform
+- pointer-events
+- scene active state
+
+When a scene is inactive:
+
+opacity: 0
+visibility: hidden
+pointer-events: none
+
+When it becomes active:
+
+opacity: 1
+visibility: visible
+pointer-events: auto
+
+Use appropriate transitions so this still feels cinematic.
+
+
+==================================================
+SCROLL UP MUST ALSO WORK
+==================================================
+
+The choreography must work perfectly in BOTH directions.
+
+Scrolling DOWN:
+
+Scene A
+→ exits
+→ Scene B enters
+
+Scrolling UP:
+
+Scene B
+→ exits
+→ Scene A enters
+
+Never leave ghost text behind when reversing scroll direction.
+
+
+==================================================
+FINAL TEST
+==================================================
+
+After implementing the fix, slowly scroll from the very beginning of the homepage.
+
+At EVERY point ask:
+
+"Can I clearly identify which single scene I am currently experiencing?"
+
+If the answer is NO because two text compositions are visible:
+
+FIX IT.
+
+The desired experience is:
+
+━━━━━━━━━━━━━━━━━━
+SCENE 1
+LONG READABLE HOLD
+━━━━━━━━━━━━━━━━━━
+SHORT TRANSITION
+━━━━━━━━━━━━━━━━━━
+SCENE 2
+LONG READABLE HOLD
+━━━━━━━━━━━━━━━━━━
+SHORT TRANSITION
+━━━━━━━━━━━━━━━━━━
+SCENE 3
+LONG READABLE HOLD
+━━━━━━━━━━━━━━━━━━
+SHORT TRANSITION
+━━━━━━━━━━━━━━━━━━
+
+Continue this through the entire homepage.
+
+IMPORTANT:
+The existing fragrance pages already use the desired clean scene behavior.
+
+Use the same underlying philosophy for the homepage.
+
+DO NOT change the existing fragrance pages.
+
+ONLY fix the homepage scene sequencing and overlap.
+
+The final homepage should feel like a luxury campaign being revealed ONE CHAPTER AT A TIME.

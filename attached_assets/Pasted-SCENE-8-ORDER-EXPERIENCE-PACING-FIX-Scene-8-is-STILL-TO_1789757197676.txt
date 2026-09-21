@@ -1,0 +1,272 @@
+SCENE 8 — ORDER EXPERIENCE PACING FIX
+
+Scene 8 is STILL TOO SHORT.
+
+I need Scene 8 to be significantly longer than the other scenes, especially the amount of time the order UI remains fully visible.
+
+This is NOT an animation-speed issue.
+This is a SCROLL-DURATION / TIMELINE-DISTRIBUTION issue.
+
+DO NOT change the design.
+DO NOT change the bottle positioning.
+DO NOT change typography.
+DO NOT change colors.
+DO NOT change the order UI.
+DO NOT change the existing clean scene choreography.
+DO NOT reintroduce overlapping scenes.
+
+ONLY make Scene 8 MUCH LONGER and give its actual content a MUCH LONGER HOLD.
+
+==================================================
+SCENE 8 SHOULD FEEL LIKE A DESTINATION
+==================================================
+
+Scene 8 is the final purchasing moment.
+
+The user should arrive at Scene 8 and feel:
+
+"I've reached the product. I can now look at it, choose my size, choose quantity, see the price, and add it to cart."
+
+They should NOT feel rushed.
+
+The order interface must remain available for a LONG scroll duration.
+
+==================================================
+NEW SCENE 8 TIMELINE
+==================================================
+
+Use approximately:
+
+ENTER:       10–15%
+ORDER UI:    10–15%
+LONG HOLD:   65–75%
+EXIT:        5–10%
+
+The LONG HOLD is the most important part.
+
+Once the complete order UI is visible:
+
+FRAGRANCE NAME
+↓
+SIZE SELECTOR
+↓
+5 ML / 10 ML
+↓
+QUANTITY
+↓
+PRICE
+↓
+ADD TO CART
+
+KEEP ALL OF IT VISIBLE TOGETHER FOR A VERY LONG TIME.
+
+Do NOT start exiting shortly after the UI appears.
+
+==================================================
+IMPORTANT: NO EMPTY SCROLL
+==================================================
+
+Do NOT simply add blank spacer distance.
+
+The additional scroll distance must belong to the ACTIVE ORDER SCENE.
+
+During the long hold:
+
+- Order UI stays visible
+- Product name stays visible
+- Size selector stays visible
+- Quantity stays visible
+- Price stays visible
+- Add to cart stays visible
+- Bottle remains visible as an atmospheric visual
+- Bottle can have VERY subtle scroll-linked movement
+- Background can have subtle cinematic movement
+
+The screen should remain visually alive while the purchasing UI stays stable.
+
+==================================================
+MAKE SCENE 8 LONGER THAN ALL OTHER SCENES
+==================================================
+
+Scene 8 should have its own dedicated scroll duration.
+
+Do NOT use the same scene duration as Scenes 1–7.
+
+Scene 8 should be approximately:
+
+2x the scroll duration of a normal text scene
+
+or, if necessary,
+
+2.5x the duration of a normal scene.
+
+The purpose is to give the user enough time to actually interact with the product.
+
+For example, if a normal scene effectively occupies 400px of meaningful scroll:
+
+Scene 8 should occupy roughly 800–1000px of meaningful scroll.
+
+Again:
+
+THIS MUST BE ACTIVE HOLD TIME,
+NOT EMPTY SPACE.
+
+==================================================
+ORDER UI MUST ARRIVE IN STAGES
+==================================================
+
+The order interface can still have a cinematic reveal:
+
+1. Bottle becomes slightly atmospheric
+2. Fragrance name appears
+3. Size selector appears
+4. Quantity selector appears
+5. Price appears
+6. Add to Cart appears
+
+But after everything is visible:
+
+STOP THE REVEAL.
+
+Then give the user a VERY LONG HOLD.
+
+Do NOT immediately transition away.
+
+==================================================
+INTERACTION SAFETY
+==================================================
+
+The long hold is especially important because users need time to interact with:
+
+- 5 ml
+- 10 ml
+- quantity controls
+- Add to Cart
+
+Do not allow the scroll timeline to remove or move these controls while the user is trying to interact with them.
+
+The complete order UI should remain stable during the long hold.
+
+==================================================
+SCROLL FEEL
+==================================================
+
+The intended experience:
+
+SCENE 7
+   ↓
+SHORT TRANSITION
+   ↓
+SCENE 8 ENTER
+   ↓
+ORDER UI REVEAL
+   ↓
+████████████████████████
+VERY LONG ACTIVE HOLD
+████████████████████████
+   ↓
+SHORT EXIT
+   ↓
+NEXT FRAGRANCE
+
+NOT:
+
+SCENE 7
+   ↓
+LONG EMPTY GAP
+   ↓
+ORDER UI
+   ↓
+IMMEDIATELY DISAPPEARS
+
+==================================================
+ALL OTHER SCENES
+==================================================
+
+Also slightly increase the HOLD duration of text-heavy scenes throughout the website.
+
+For Scenes 1–7:
+
+ENTER: ~10–15%
+HOLD: 70–80%
+EXIT: ~10–15%
+
+Keep transitions short.
+
+Text should remain readable for substantially longer than it currently does.
+
+The user should never need to rush to read a scene.
+
+==================================================
+RESPONSIVE
+==================================================
+
+On mobile, make Scene 8 even longer if necessary.
+
+Mobile users need more time because:
+
+- Text wraps
+- Controls stack vertically
+- The product occupies more vertical space
+- The user needs time to interact with buttons
+
+Do NOT compensate by shrinking the UI.
+
+Increase meaningful scroll duration instead.
+
+==================================================
+TECHNICAL REQUIREMENT
+==================================================
+
+Inspect the existing Scene 8 GSAP / ScrollTrigger / timeline implementation.
+
+Find whatever currently controls:
+
+- Scene 8 scroll distance
+- timeline duration
+- hold duration
+- spacer duration
+- exit timing
+
+Increase the ACTIVE HOLD portion substantially.
+
+Do not just increase the entire section height while leaving a blank period.
+
+If using timeline progress, Scene 8 should behave approximately like:
+
+0.00–0.12  ENTER
+0.12–0.25  ORDER UI REVEAL
+0.25–0.90  VERY LONG HOLD
+0.90–1.00  EXIT
+
+Adjust the exact values if needed, but the principle is:
+
+MOST OF SCENE 8 = COMPLETE ORDER UI VISIBLE.
+
+==================================================
+FINAL TEST
+==================================================
+
+After implementing this, manually scroll through Scene 8.
+
+When the complete order UI appears, I should be able to:
+
+- read the fragrance name
+- look at the bottle
+- select 5 ml or 10 ml
+- change quantity
+- look at the price
+- move the cursor to Add to Cart
+- click Add to Cart
+
+WITHOUT feeling like the scene is about to disappear.
+
+Scene 8 should feel CALM, LUXURIOUS, STABLE and INTENTIONAL.
+
+It should be the LONGEST and most comfortable scene on the entire fragrance page.
+
+Again:
+
+DO NOT ADD EMPTY SCROLL.
+
+ADD MORE ACTIVE CONTENT HOLD TIME.
