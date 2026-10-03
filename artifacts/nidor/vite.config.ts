@@ -29,6 +29,11 @@ if (!basePath) {
 
 export default defineConfig({
   base: basePath,
+  define: {
+    'import.meta.env.VITE_REPLIT_DEV_DOMAIN': JSON.stringify(
+      process.env.REPLIT_DEV_DOMAIN ?? '',
+    ),
+  },
   plugins: [
     react(),
     tailwindcss(),

@@ -6,10 +6,18 @@ import { sceneChoreography, sceneVisibility } from '@/data/scene-choreography';
 type FragranceExperienceProps = {
   fragrance: Fragrance;
   previousWorld: string;
-  selectedSize: string;
-  onSizeChange: (size: string) => void;
-  onAdd: (fragrance: Fragrance, size: string, quantity: number) => void;
+  selectedSize: number;
+  onSizeChange: (size: number) => void;
+  onAdd: (fragrance: Fragrance, size: number, quantity: number) => void;
 };
+
+function formatLkr(value: number): string {
+  return new Intl.NumberFormat('en-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    maximumFractionDigits: 2,
+  }).format(value);
+}
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -68,6 +76,24 @@ export function FragranceExperience({ fragrance, previousWorld, selectedSize, on
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const { theme, visual } = fragrance;
+  const selectedVariant = fragrance.variants.find((variant) => variant.sizeMl === selectedSize);
+  const priceIsReady = !!selectedVariant
+    && !selectedVariant.priceNeedsConfiguration
+    && selectedVariant.priceLkr !== null;
+  const stockIsReady = !!selectedVariant && !selectedVariant.stockNeedsConfiguration;
+  const canAdd = !!selectedVariant
+    && selectedVariant.isActive
+    && priceIsReady
+    && stockIsReady
+    && selectedVariant.stockQuantity > 0
+    && quantity <= selectedVariant.stockQuantity;
+  const maxQuantityReached = stockIsReady
+    && (selectedVariant?.stockQuantity ?? 0) > 0
+    && quantity >= (selectedVariant?.stockQuantity ?? 0);
+
+  useEffect(() => {
+    setQuantity(1);
+  }, [fragrance.id, selectedSize]);
 
   const bottleStyle = useMemo(() => {
     const reveal = smoothstep(clamp((progress - 0.05) / 0.24));
@@ -182,37 +208,66 @@ export function FragranceExperience({ fragrance, previousWorld, selectedSize, on
             <h4 style={revealStyle(.12)}>{fragrance.name}</h4>
             <p className="order-description" style={revealStyle(.22)}>{fragrance.description}</p>
             <div className="size-row" style={revealStyle(.36)} aria-label={`Select size for ${fragrance.name}`}>
-              {['5 ml', '10 ml'].map((size) => (
+              {([5, 10] as const).map((size) => {
+                const variant = fragrance.variants.find((item) => item.sizeMl === size);
+                return (
                 <button
-                  key={size}
+                  key={`${size}-ml`}
+                  type="button"
                   className={`size-button ${selectedSize === size ? 'is-selected' : ''}`}
                   onClick={() => onSizeChange(size)}
                   aria-pressed={selectedSize === size}
-                  data-testid={`button-size-${fragrance.id}-${size.replace(' ', '-')}`}
+                  aria-label={`${size} ml${variant?.isActive ? '' : ', unavailable'}`}
+                  title={variant?.isActive ? `${size} ml` : 'This size is not available'}
+                  disabled={!variant?.isActive}
+                  data-testid={`button-size-${fragrance.id}-${size}-ml`}
                 >
-                  {size}
+                  {size} ml
                 </button>
-              ))}
+                );
+              })}
             </div>
             <div className="order-controls">
               <div className="order-price" style={revealStyle(.54)}>
                 <span>Price</span>
-                <strong>{fragrance.price ?? 'To be confirmed'}</strong>
+                <strong>{priceIsReady ? formatLkr(selectedVariant.priceLkr!) : 'To be confirmed'}</strong>
+                {selectedVariant?.priceNeedsConfiguration && <small className="order-availability">Price needs configuration</small>}
+                {!selectedVariant && <small className="order-availability">Size unavailable</small>}
               </div>
               <div className="quantity-control" style={revealStyle(.7)} aria-label={`Quantity for ${fragrance.name}`}>
                 <span>Quantity</span>
-                <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Decrease quantity">−</button>
+                <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Decrease quantity" disabled={quantity <= 1}>−</button>
                 <strong aria-live="polite">{quantity}</strong>
-                <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity">+</button>
+                <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Increase quantity" disabled={!stockIsReady || selectedVariant?.stockQuantity === 0 || maxQuantityReached}>+</button>
               </div>
+            </div>
+            <div className="order-availability" role="status" aria-live="polite">
+              {!selectedVariant || !selectedVariant.isActive
+                ? 'This size is unavailable.'
+                : selectedVariant.stockNeedsConfiguration
+                  ? 'Availability to be confirmed.'
+                  : selectedVariant.stockQuantity === 0
+                    ? 'Currently out of stock.'
+                    : !priceIsReady
+                      ? 'Price to be confirmed.'
+                      : `${selectedVariant.stockQuantity} available`}
             </div>
             <button
               className="add-button"
               style={revealStyle(.86)}
               onClick={() => onAdd(fragrance, selectedSize, quantity)}
+              disabled={!canAdd}
               data-testid={`button-add-${fragrance.id}`}
             >
-              Add to cart
+              {canAdd
+                ? 'Add to cart'
+                : !selectedVariant || !selectedVariant.isActive
+                  ? 'Unavailable'
+                  : selectedVariant.stockNeedsConfiguration
+                    ? 'Stock to be confirmed'
+                    : selectedVariant.stockQuantity === 0
+                      ? 'Out of stock'
+                      : 'Price to be confirmed'}
             </button>
           </div>
         </div>

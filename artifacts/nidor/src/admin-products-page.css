@@ -1,0 +1,170 @@
+.nidor-admin-gate {
+  --nag-paper: #f1eadc;
+  --nag-ink: #201b17;
+  --nag-muted: #756c60;
+  --nag-gold: #b8894a;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 34px 20px;
+  background:
+    radial-gradient(circle at 80% 16%, rgba(215, 192, 155, .38), transparent 35%),
+    linear-gradient(135deg, #f1eadc 0%, #e7dccb 56%, #ddcdae 100%);
+  color: var(--nag-ink);
+  font-family: var(--app-font-sans, 'Plus Jakarta Sans', sans-serif);
+}
+
+.nag-card {
+  position: relative;
+  width: min(100%, 480px);
+  padding: clamp(30px, 6vw, 58px);
+  border: 1px solid rgba(37, 29, 23, .17);
+  background: rgba(247, 242, 232, .88);
+  box-shadow: 0 28px 90px rgba(53, 42, 26, .12);
+}
+
+.nag-card::after {
+  position: absolute;
+  top: -1px;
+  right: 28px;
+  width: 48px;
+  height: 2px;
+  background: var(--nag-gold);
+  content: '';
+}
+
+.nag-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #6f6252;
+  font-family: var(--app-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nag-back:hover { color: var(--nag-ink); }
+
+.nag-mark {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin-top: 43px;
+  place-items: center;
+  border: 1px solid rgba(184, 137, 74, .55);
+  border-radius: 50%;
+  color: var(--nag-gold);
+}
+
+.nag-kicker {
+  margin-top: 25px;
+  color: #92724a;
+  font-family: var(--app-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .17em;
+}
+
+.nag-card h1 {
+  margin: 17px 0 15px;
+  font-family: var(--app-font-serif, 'Instrument Serif', Georgia, serif);
+  font-size: clamp(47px, 10vw, 70px);
+  font-weight: 400;
+  letter-spacing: -.055em;
+  line-height: .85;
+}
+
+.nag-card h1 em { color: #916d48; font-weight: 400; }
+
+.nag-message {
+  margin: 0;
+  color: var(--nag-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.nag-message strong { color: var(--nag-ink); font-weight: 600; }
+
+.nag-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 29px;
+}
+
+.nag-form label {
+  color: #6e665a;
+  font-family: var(--app-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nag-form input {
+  min-height: 45px;
+  border: 1px solid rgba(37, 29, 23, .23);
+  border-radius: 0;
+  padding: 0 13px;
+  outline: none;
+  background: rgba(255, 255, 255, .38);
+  color: var(--nag-ink);
+  font: 12px var(--app-font-sans, sans-serif);
+}
+
+.nag-form input:focus { border-color: var(--nag-gold); box-shadow: 0 0 0 1px var(--nag-gold); }
+.nag-form input::placeholder { color: #a49b8e; }
+
+.nag-primary {
+  min-height: 45px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  border: 1px solid #282720;
+  padding: 0 18px;
+  background: #282720;
+  color: var(--nag-paper);
+  cursor: pointer;
+  font-family: var(--app-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.nag-form .nag-primary { width: 100%; margin-top: 7px; }
+.nag-primary:hover:not(:disabled) { transform: translateY(-2px); background: #514b3d; }
+.nag-primary:disabled { opacity: .6; cursor: wait; }
+
+.nag-text-button {
+  margin-top: 20px;
+  border: 0;
+  border-bottom: 1px solid #aa8a5b;
+  padding: 0 0 4px;
+  background: transparent;
+  color: #735c3c;
+  cursor: pointer;
+  font-family: var(--app-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.nag-form-error { color: #9e4f45; font-size: 10px; }
+.nag-footnote { margin: 21px 0 0; color: #938a7e; font: 8px/1.7 var(--app-font-mono, monospace); letter-spacing: .04em; }
+.nag-loading { display: flex; align-items: center; gap: 12px; color: var(--nag-muted); font: 10px var(--app-font-mono, monospace); letter-spacing: .1em; text-transform: uppercase; }
+.nag-spinner { animation: nag-spin .9s linear infinite; }
+@keyframes nag-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 480px) {
+  .nag-card { padding: 29px 24px; }
+  .nag-mark { margin-top: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nidor-admin-gate *, .nidor-admin-gate *::before, .nidor-admin-gate *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

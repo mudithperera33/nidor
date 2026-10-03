@@ -1,5 +1,12 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "PORT=3000 BASE_PATH=/ pnpm --filter @workspace/nidor run build",
   "installCommand": "pnpm install --frozen-lockfile",
-  "outputDirectory": "artifacts/nidor/dist/public"
+  "outputDirectory": "artifacts/nidor/dist/public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

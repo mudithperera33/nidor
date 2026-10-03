@@ -664,6 +664,8 @@ button { font: inherit; }
   transition: color .25s ease, background .25s ease;
 }
 .size-button:hover, .size-button.is-selected { background: var(--ivory); color: var(--ink); }
+.size-button:disabled { opacity: .42; cursor: not-allowed; }
+.size-button:disabled:hover { background: transparent; color: var(--world-foreground); }
 .add-button {
   border: 1px solid var(--world-accent);
   padding: 14px 22px;
@@ -715,6 +717,12 @@ button { font: inherit; }
 .quantity-control strong { min-width: 18px; font-size: 16px; text-align: center; }
 .order-price { align-items: baseline; }
 .order-price strong { color: var(--world-foreground); font-size: 17px; }
+.order-price .order-availability { flex-basis: 100%; text-align: right; }
+.order-availability { color: color-mix(in srgb, var(--world-foreground) 70%, transparent); font-family: var(--app-font-mono); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; }
+.order-controls + .order-availability { margin: -9px 0 13px; }
+.order-reveal .add-button:disabled { opacity: .58; cursor: not-allowed; }
+.order-reveal .add-button:disabled:hover { transform: none; background: var(--world-accent); }
+.quantity-control button:disabled { opacity: .45; cursor: not-allowed; }
 .experience-transition {
   position: absolute;
   z-index: 5;
@@ -752,6 +760,12 @@ button { font: inherit; }
 .footer-col a:hover { color: var(--gold); }
 .footer-col span { max-width: 260px; }
 .footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 15px; margin-top: 48px; padding-top: 17px; border-top: 1px solid rgba(241,234,220,.16); color: #74695f; }
+
+.catalog-state { min-height: 100dvh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 40px clamp(24px, 8vw, 125px); background: var(--ivory); }
+.catalog-state h1 { max-width: 680px; margin: 25px 0 14px; font: clamp(56px, 9vw, 112px)/.86 var(--app-font-serif); font-weight: 400; letter-spacing: -.06em; }
+.catalog-state p { max-width: 470px; color: #6d6157; font-size: 13px; line-height: 1.8; }
+.catalog-state button { margin-top: 16px; border: 1px solid var(--ink); padding: 12px 17px; background: transparent; color: var(--ink); cursor: pointer; font: 9px var(--app-font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.catalog-state button:hover { background: var(--ink); color: var(--ivory); }
 
 @media (max-width: 800px) {
   .nav-shell { height: 66px; padding: 0 20px; }

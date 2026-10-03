@@ -4,9 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { FragranceExperience } from '@/components/fragrance-experience';
 import { LandingExperience } from '@/components/landing-experience';
-import { type Fragrance, fragrances } from '@/data/fragrances';
+import { type Fragrance } from '@/data/fragrances';
+import { usePublicCatalog } from '@/hooks/use-catalog';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import AdminProductsPage from '@/pages/admin-products';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 
@@ -91,7 +93,7 @@ function BrandIntro() {
   );
 }
 
-function CollectionPreview() {
+function CollectionPreview({ fragrances }: { fragrances: Fragrance[] }) {
   return (
     <section className="collection-preview" aria-labelledby="collection-preview-title">
       <div className="collection-preview-heading">
@@ -165,13 +167,16 @@ function Footer() {
   );
 }
 
-function Home() {
+function Storefront({ fragrances }: { fragrances: Fragrance[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [navLight, setNavLight] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [status, setStatus] = useState('');
-  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>(
-    Object.fromEntries(fragrances.map((item) => [item.id, '5 ml'])),
+  const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>(
+    Object.fromEntries(fragrances.map((item) => [
+      item.id,
+      item.variants.find((variant) => variant.isActive)?.sizeMl ?? 5,
+    ])) as Record<string, number>,
   );
 
   useEffect(() => {
@@ -188,15 +193,29 @@ function Home() {
     }, { threshold: 0.18 });
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [fragrances]);
 
-  const setSize = (id: string, size: string) => {
+  const setSize = (id: string, size: number) => {
     setSelectedSizes((previous) => ({ ...previous, [id]: size }));
   };
 
-  const addEdition = (fragrance: Fragrance, size: string, quantity: number) => {
+  const addEdition = (fragrance: Fragrance, size: number, quantity: number) => {
+    const variant = fragrance.variants.find((item) => item.sizeMl === size);
+    if (
+      !variant
+      || !variant.isActive
+      || variant.priceNeedsConfiguration
+      || variant.priceLkr === null
+      || variant.stockNeedsConfiguration
+      || variant.stockQuantity <= 0
+      || quantity > variant.stockQuantity
+    ) {
+      setStatus(`${fragrance.name} · ${size} ml is unavailable until its price and stock are confirmed.`);
+      window.setTimeout(() => setStatus(''), 4800);
+      return;
+    }
     setCartCount((count) => count + quantity);
-    setStatus(`${quantity} × ${fragrance.name} · ${size} added to your edit. Pricing is placeholder content for now.`);
+    setStatus(`${quantity} × ${fragrance.name} · ${size} ml added to your edit.`);
     window.setTimeout(() => setStatus(''), 4800);
   };
 
@@ -204,7 +223,7 @@ function Home() {
     <div className="nidor-page grain">
       <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} cartCount={cartCount} light={navLight} />
       <main>
-        <LandingExperience />
+        <LandingExperience fragrances={fragrances} />
         {fragrances.map((fragrance, index) => (
           <FragranceExperience
             key={fragrance.id}
@@ -225,11 +244,41 @@ function Home() {
   );
 }
 
+function Home() {
+  const catalog = usePublicCatalog();
+
+  useEffect(() => {
+    document.title = 'NIDOR — Scents, Stories, You';
+  }, []);
+
+  if (catalog.isLoading) {
+    return <main className="catalog-state" aria-live="polite"><span className="eyebrow">NIDOR / Collection</span><h1>Loading the collection.</h1></main>;
+  }
+
+  if (catalog.isError) {
+    return (
+      <main className="catalog-state" role="alert">
+        <span className="eyebrow">NIDOR / Collection</span>
+        <h1>The collection is unavailable.</h1>
+        <p>{catalog.error instanceof Error ? catalog.error.message : 'Product data could not be loaded.'}</p>
+        <button type="button" onClick={() => catalog.refetch()} data-testid="button-retry-products">Try again</button>
+      </main>
+    );
+  }
+
+  if (!catalog.data?.length) {
+    return <main className="catalog-state"><span className="eyebrow">NIDOR / Collection</span><h1>No editions are published.</h1></main>;
+  }
+
+  return <Storefront fragrances={catalog.data} />;
+}
+
 function Router() {
   return (
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/admin/products" component={AdminProductsPage} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

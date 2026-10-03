@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
-import { type Fragrance, fragrances } from '@/data/fragrances';
+import { type Fragrance } from '@/data/fragrances';
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -64,7 +64,7 @@ function fragranceMeta(fragrance: Fragrance) {
   return [fragrance.house, fragrance.family, fragrance.gender, fragrance.concentration].filter(Boolean).join(' · ');
 }
 
-export function LandingExperience() {
+export function LandingExperience({ fragrances }: { fragrances: Fragrance[] }) {
   const landingRef = useRef<HTMLElement>(null);
   const progress = useLandingProgress(landingRef);
   const collectionProgress = clamp((progress - .62) / .28);

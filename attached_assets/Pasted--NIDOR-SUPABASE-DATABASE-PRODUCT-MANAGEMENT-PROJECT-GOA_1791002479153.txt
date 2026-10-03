@@ -1,0 +1,357 @@
+# NIDOR — SUPABASE DATABASE & PRODUCT MANAGEMENT
+
+## PROJECT GOAL
+
+Connect the existing NIDOR fragrance website to Supabase and build a functional product management system.
+
+The website already has:
+
+* A cinematic homepage
+* Five fragrance experiences
+* Existing bottle PNGs and brand assets
+* Product descriptions and fragrance notes
+* 5 ml and 10 ml decant options
+* An existing order interface
+
+Preserve all of these.
+
+**Do not redesign the website or modify its animation system.**
+
+This task is strictly about the database, product data, inventory, and admin product management.
+
+---
+
+## PHASE 1 — AUDIT THE EXISTING PROJECT
+
+Before making any changes:
+
+1. Inspect the existing project structure.
+2. Identify the current Supabase configuration and connection.
+3. Identify where the five fragrances are currently defined.
+4. Identify the existing prices, product images, fragrance notes, and size selectors.
+5. Identify the existing authentication system, if any.
+6. Identify the framework and current data-fetching approach.
+
+Do not create a second Supabase client if one already exists.
+
+Do not overwrite existing product data.
+
+Do not replace existing product images with generated images.
+
+If the existing Supabase project is not connected, explain exactly what configuration is missing before proceeding.
+
+---
+
+## PHASE 2 — DATABASE SCHEMA
+
+Create a clean, normalized PostgreSQL schema using Supabase.
+
+### Table 1: products
+
+Fields:
+
+* id — UUID primary key
+* name — product name
+* slug — unique URL-friendly identifier
+* brand — fragrance brand
+* description — short product description
+* fragrance_family — fragrance family
+* gender — product audience
+* concentration — nullable, only when verified
+* top_notes — text array
+* heart_notes — text array
+* base_notes — text array
+* mood — nullable
+* occasion — nullable
+* season — nullable
+* image_url — primary product image
+* theme_config — JSONB for existing fragrance-specific visual theme data
+* is_active — whether the product is available for sale
+* is_featured — whether the product is featured
+* display_order — collection ordering
+* created_at
+* updated_at
+
+### Table 2: product_variants
+
+Each fragrance has separate variants for 5 ml and 10 ml.
+
+Fields:
+
+* id — UUID primary key
+* product_id — foreign key referencing products
+* size_ml — 5 or 10
+* sku — unique stock-keeping identifier
+* price_lkr — price in Sri Lankan rupees
+* stock_quantity — available units
+* is_active — whether this variant is available
+* created_at
+* updated_at
+
+Constraints:
+
+* A product cannot have duplicate variants for the same size.
+* Price must be nonnegative.
+* Stock quantity must be nonnegative.
+* Only 5 ml and 10 ml sizes are permitted for the initial collection.
+
+Use NUMERIC for monetary values rather than floating-point types.
+
+Do not create separate products for the 5 ml and 10 ml variants.
+
+---
+
+## PHASE 3 — INITIAL PRODUCT DATA
+
+Create these five products:
+
+1. Rasasi Hawas Gold Digger
+2. Armaf Club de Nuit Woman
+3. Lattafa Yara
+4. Rasasi Hawas Chrome
+5. Armaf Club de Nuit Intense Man
+
+For each product:
+
+* Preserve the exact existing product image.
+* Preserve the existing slug and URL structure where possible.
+* Preserve existing descriptions and fragrance notes.
+* Preserve the existing fragrance-specific theme configuration.
+* Create two variants: 5 ml and 10 ml.
+
+IMPORTANT:
+
+Do not invent prices or stock quantities.
+
+Read the existing website's product data and migrate the actual values into Supabase.
+
+If a price is missing, mark it as requiring configuration rather than inventing one.
+
+If stock quantities are unknown, initialize them to zero and flag them for the admin to configure.
+
+Do not overwrite existing product data when the seed process runs again.
+
+---
+
+## PHASE 4 — SUPABASE SECURITY
+
+Configure Row Level Security (RLS) for every table.
+
+Public visitors:
+
+* Can read active products.
+* Can read active variants of active products.
+* Cannot modify products.
+* Cannot modify prices.
+* Cannot modify stock.
+* Cannot access private admin data.
+
+Administrators:
+
+* Can create products.
+* Can edit products.
+* Can activate or deactivate products.
+* Can update prices.
+* Can update inventory.
+* Can manage product images.
+
+Use the existing authentication system if one is already present.
+
+If admin authentication does not exist, implement a secure admin role system.
+
+IMPORTANT SECURITY RULES:
+
+* Never expose the Supabase service-role key in frontend code.
+* Never use a client-side admin flag as the only authorization mechanism.
+* Enforce authorization on the server and through database policies.
+* Do not allow users to assign themselves an admin role.
+* Do not disable RLS to make the application work.
+
+---
+
+## PHASE 5 — ADMIN PRODUCT DASHBOARD
+
+Create a secure admin section at /admin/products.
+
+Use the existing NIDOR design system.
+
+The admin dashboard should be functional and easy to use.
+
+### Product list
+
+Display:
+
+* Product image
+* Product name
+* Brand
+* 5 ml price
+* 10 ml price
+* 5 ml stock
+* 10 ml stock
+* Active/inactive status
+* Featured status
+
+Include:
+
+* Search by product name
+* Filter by brand
+* Filter by active/inactive status
+* Stock status indicators
+* Edit button
+* Add product button
+
+### Product editor
+
+Allow administrators to:
+
+* Edit product name
+* Edit brand
+* Edit slug
+* Edit description
+* Edit fragrance family
+* Edit gender
+* Edit concentration
+* Edit top notes
+* Edit heart notes
+* Edit base notes
+* Edit mood, occasion, and season
+* Upload or replace the product image
+* Edit 5 ml price
+* Edit 10 ml price
+* Edit 5 ml stock
+* Edit 10 ml stock
+* Activate or deactivate the product
+* Mark the product as featured
+* Change collection display order
+
+Use proper form validation.
+
+Show clear success and error messages.
+
+Require confirmation before deactivating a product.
+
+Do not permanently delete products that might be referenced by future orders.
+
+---
+
+## PHASE 6 — IMAGE STORAGE
+
+Use Supabase Storage for product images if appropriate.
+
+Create a product image bucket with appropriate access policies.
+
+Requirements:
+
+* Public storefront images can be read publicly.
+* Only authorized administrators can upload, replace, or delete images.
+* Preserve existing image assets and filenames where possible.
+* Keep the original high-resolution bottle PNGs.
+* Do not modify the transparent backgrounds.
+* Use the correct existing image for each fragrance.
+
+Do not regenerate any product imagery.
+
+---
+
+## PHASE 7 — CONNECT THE STOREFRONT
+
+Replace hardcoded product data with data fetched from Supabase.
+
+The homepage, collection previews, fragrance pages, and order interfaces must use the centralized database data.
+
+Ensure:
+
+* Product names come from Supabase.
+* Product descriptions come from Supabase.
+* Fragrance notes come from Supabase.
+* Product images come from Supabase.
+* Variant sizes come from Supabase.
+* Prices come from Supabase.
+* Availability comes from Supabase.
+
+The 5 ml and 10 ml selectors must display the correct prices for the selected variant.
+
+If a variant is inactive or out of stock, reflect that in the purchasing interface.
+
+Do not show unpublished products on the public storefront.
+
+IMPORTANT:
+
+Preserve all existing scroll-triggered animations, bottle positioning, transitions, typography, colors, and scene timing.
+
+Do not rebuild the cinematic pages.
+
+Only replace the product data source.
+
+---
+
+## PHASE 8 — ERROR HANDLING AND PERFORMANCE
+
+Implement:
+
+* Loading states
+* Error states
+* Empty states
+* Proper TypeScript types
+* Efficient product queries
+* Safe handling of missing images
+* Graceful handling of missing product fields
+* Proper database error reporting
+
+Do not silently substitute fake product data when the database request fails.
+
+Do not leave the storefront permanently blank if Supabase is temporarily unavailable.
+
+---
+
+## PHASE 9 — MIGRATIONS AND TESTING
+
+Create version-controlled SQL migration files.
+
+Do not apply destructive migrations.
+
+Do not reset the existing Supabase database.
+
+Before applying any migration:
+
+1. Review the SQL.
+2. Verify that existing data will not be deleted.
+3. Check foreign-key relationships.
+4. Check RLS policies.
+5. Confirm that the migration can be safely reapplied where appropriate.
+
+Test:
+
+* All five products load.
+* Each product has 5 ml and 10 ml variants.
+* Correct prices appear.
+* Product edits persist after refreshing.
+* Stock edits persist after refreshing.
+* Unpublished products are hidden from the public.
+* Non-admin users cannot access product management.
+* Unauthorized users cannot change prices or stock.
+* Existing fragrance pages still work.
+* Existing scroll animations remain unchanged.
+* Mobile and desktop layouts remain intact.
+
+---
+
+## PHASE 10 — FINAL REPORT
+
+When finished, report:
+
+1. Tables created.
+2. Migration files created.
+3. RLS policies implemented.
+4. Products and variants seeded.
+5. Whether prices and stock were migrated or need configuration.
+6. Admin dashboard URL.
+7. Any required Supabase environment variables.
+8. Tests performed and their results.
+9. Any remaining setup steps.
+
+Do not claim the database is connected unless you have verified that the application can read and write the intended data.
+
+FINAL REQUIREMENT:
+
+The result must be a functioning Supabase-powered product management system for NIDOR, with the existing cinematic fragrance website preserved exactly as it is.
