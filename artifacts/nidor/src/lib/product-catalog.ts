@@ -1,16 +1,20 @@
 import type { Fragrance, FragranceTheme, FragranceVariant, FragranceVisualConfig, NoteGroup } from '@/data/fragrances';
-import { buildAdminSignInRedirectUrl } from '@/lib/admin-redirect';
 import { getSupabaseClient } from '@/lib/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
+
+export type ProductVariantType = 'decant' | 'full_bottle';
 
 export type ProductVariantRecord = {
   id: string;
   product_id: string;
-  size_ml: 5 | 10;
+  variant_type?: ProductVariantType;
+  size_ml: number;
   sku: string;
   price_lkr: number | string | null;
   price_needs_configuration: boolean;
   stock_quantity: number;
   stock_needs_configuration: boolean;
+  low_stock_threshold?: number | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -43,11 +47,15 @@ export type ProductRecord = {
 
 export type ProductVariantDraft = {
   id?: string;
-  sizeMl: 5 | 10;
+  variantType: ProductVariantType;
+  sizeMl: number | null;
+  originalSizeMl?: number | null;
+  sku: string;
   priceLkr: number | null;
   priceNeedsConfiguration: boolean;
   stockQuantity: number;
   stockNeedsConfiguration: boolean;
+  lowStockThreshold: number | null;
   isActive: boolean;
 };
 
@@ -73,6 +81,80 @@ export type ProductDraft = {
   displayOrder: number;
   variants: ProductVariantDraft[];
 };
+
+export type UploadedProductImage = {
+  path: string;
+  publicUrl: string;
+};
+
+const validSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export function validateProductDraft(
+  draft: ProductDraft,
+  hasPendingImage = false,
+): string | null {
+  if (!draft.name.trim()) return 'Perfume name is required.';
+  if (!draft.brand.trim()) return 'Brand is required.';
+  if (!validSlug.test(draft.slug.trim().toLowerCase())) {
+    return 'Use a URL slug with lowercase letters, numbers, and hyphens.';
+  }
+  if (!hasPendingImage && !draft.imageUrl.trim()) return 'Upload a product image before saving.';
+  if (!Number.isInteger(draft.displayOrder) || draft.displayOrder < 0) {
+    return 'Display order must be a whole number of 0 or greater.';
+  }
+  if (draft.gender && !['Men', 'Women', 'Unisex'].includes(draft.gender)) {
+    return 'Choose Men, Women, or Unisex for the audience.';
+  }
+
+  for (const sizeMl of [5, 10]) {
+    if (!draft.variants.some((variant) => variant.variantType === 'decant' && variant.sizeMl === sizeMl)) {
+      return `Add the required ${sizeMl} ml decant format.`;
+    }
+  }
+
+  const seenFormats = new Set<string>();
+  for (const variant of draft.variants) {
+    if (variant.variantType === 'full_bottle' && variant.sizeMl === null) {
+      if (variant.isActive) return 'Enter the actual full-bottle volume in ml, or pause this option.';
+      continue;
+    }
+    if (!Number.isInteger(variant.sizeMl) || (variant.sizeMl ?? 0) < 1) {
+      return 'Variant volumes must be positive whole numbers of ml.';
+    }
+    if (variant.variantType === 'decant' && variant.sizeMl !== 5 && variant.sizeMl !== 10) {
+      return 'Decant sizes must be 5 ml or 10 ml.';
+    }
+    const key = `${variant.variantType}:${variant.sizeMl}`;
+    if (seenFormats.has(key)) return 'Each perfume can have only one variant for each format and volume.';
+    seenFormats.add(key);
+
+    if (!variant.priceNeedsConfiguration) {
+      const price = variant.priceLkr;
+      if (price === null || !Number.isFinite(price) || price < 0
+        || Math.abs(price * 100 - Math.round(price * 100)) > 0.000001) {
+        return `${variant.sizeMl} ml price must be a nonnegative LKR amount with up to two decimal places.`;
+      }
+    }
+    if (!variant.stockNeedsConfiguration
+      && (!Number.isInteger(variant.stockQuantity) || variant.stockQuantity < 0)) {
+      return `${variant.sizeMl} ml stock must be a whole number of 0 or greater.`;
+    }
+    if (variant.lowStockThreshold !== null
+      && (!Number.isInteger(variant.lowStockThreshold) || variant.lowStockThreshold < 0)) {
+      return 'Low-stock thresholds must be whole numbers of 0 or greater.';
+    }
+  }
+
+  if (!draft.id && draft.isActive && !draft.variants.some((variant) =>
+    variant.isActive
+    && !variant.priceNeedsConfiguration
+    && variant.priceLkr !== null
+    && !variant.stockNeedsConfiguration,
+  )) {
+    return 'Configure price and stock for at least one active format before publishing.';
+  }
+  return null;
+}
 
 export function createEmptyProductDraft(nextDisplayOrder = 1): ProductDraft {
   return {
@@ -107,26 +189,63 @@ export function createEmptyProductDraft(nextDisplayOrder = 1): ProductDraft {
     displayOrder: nextDisplayOrder,
     variants: [
       {
+        variantType: 'decant',
         sizeMl: 5,
+        sku: '',
         priceLkr: null,
         priceNeedsConfiguration: true,
         stockQuantity: 0,
         stockNeedsConfiguration: true,
+        lowStockThreshold: null,
         isActive: true,
       },
       {
+        variantType: 'decant',
         sizeMl: 10,
+        sku: '',
         priceLkr: null,
         priceNeedsConfiguration: true,
         stockQuantity: 0,
         stockNeedsConfiguration: true,
+        lowStockThreshold: null,
         isActive: true,
+      },
+      {
+        variantType: 'full_bottle',
+        sizeMl: null,
+        originalSizeMl: null,
+        sku: '',
+        priceLkr: null,
+        priceNeedsConfiguration: true,
+        stockQuantity: 0,
+        stockNeedsConfiguration: true,
+        lowStockThreshold: null,
+        isActive: false,
       },
     ],
   };
 }
 
 export function productToDraft(product: ProductRecord): ProductDraft {
+  const variants = product.product_variants ?? [];
+  const decants = ([5, 10] as const).map((sizeMl) => {
+    const variant = variants.find((item) => (item.variant_type ?? 'decant') === 'decant' && item.size_ml === sizeMl);
+    return {
+      ...(variant ? { id: variant.id } : {}),
+      variantType: 'decant' as const,
+      sizeMl,
+      sku: variant?.sku ?? '',
+      priceLkr: variant?.price_lkr === null || variant?.price_lkr === undefined
+        ? null
+        : Number(variant.price_lkr),
+      priceNeedsConfiguration: variant?.price_needs_configuration ?? true,
+      stockQuantity: variant?.stock_quantity ?? 0,
+      stockNeedsConfiguration: variant?.stock_needs_configuration ?? true,
+      lowStockThreshold: variant?.low_stock_threshold ?? null,
+      isActive: variant?.is_active ?? false,
+    };
+  });
+  const bottle = variants.find((item) => item.variant_type === 'full_bottle');
   return {
     id: product.id,
     name: product.name,
@@ -147,20 +266,24 @@ export function productToDraft(product: ProductRecord): ProductDraft {
     isActive: product.is_active,
     isFeatured: product.is_featured,
     displayOrder: product.display_order,
-    variants: [5, 10].map((sizeMl) => {
-      const variant = product.product_variants?.find((item) => item.size_ml === sizeMl);
-      return {
-        ...(variant ? { id: variant.id } : {}),
-        sizeMl: sizeMl as 5 | 10,
-        priceLkr: variant?.price_lkr === null || variant?.price_lkr === undefined
+    variants: [
+      ...decants,
+      {
+        ...(bottle ? { id: bottle.id } : {}),
+        variantType: 'full_bottle',
+        sizeMl: bottle?.size_ml ?? null,
+        originalSizeMl: bottle?.size_ml ?? null,
+        sku: bottle?.sku ?? '',
+        priceLkr: bottle?.price_lkr === null || bottle?.price_lkr === undefined
           ? null
-          : Number(variant.price_lkr),
-        priceNeedsConfiguration: variant?.price_needs_configuration ?? true,
-        stockQuantity: variant?.stock_quantity ?? 0,
-        stockNeedsConfiguration: variant?.stock_needs_configuration ?? true,
-        isActive: variant?.is_active ?? false,
-      };
-    }),
+          : Number(bottle.price_lkr),
+        priceNeedsConfiguration: bottle?.price_needs_configuration ?? true,
+        stockQuantity: bottle?.stock_quantity ?? 0,
+        stockNeedsConfiguration: bottle?.stock_needs_configuration ?? true,
+        lowStockThreshold: bottle?.low_stock_threshold ?? null,
+        isActive: bottle?.is_active ?? false,
+      },
+    ],
   };
 }
 
@@ -204,6 +327,7 @@ function formatVariant(row: ProductVariantRecord): FragranceVariant {
   const price = row.price_lkr === null ? null : Number(row.price_lkr);
   return {
     id: row.id,
+    variantType: row.variant_type ?? 'decant',
     sizeMl: row.size_ml,
     sku: row.sku,
     priceLkr: price !== null && Number.isFinite(price) ? price : null,
@@ -242,10 +366,66 @@ function formatProduct(row: ProductRecord): Fragrance {
     visual: readVisual(config),
     variants: (row.product_variants ?? [])
       .map(formatVariant)
-      .sort((left, right) => left.sizeMl - right.sizeMl),
+      .sort((left, right) => {
+        if (left.variantType !== right.variantType) {
+          return left.variantType === 'decant' ? -1 : 1;
+        }
+        return left.sizeMl - right.sizeMl;
+      }),
+    isFeatured: row.is_featured,
   };
 }
 
+export function productDraftToFragrance(draft: ProductDraft, imageOverride?: string): Fragrance {
+  const config = objectValue(draft.themeConfig);
+  const variants = draft.variants
+    .filter((variant): variant is typeof variant & { sizeMl: number } =>
+      Number.isInteger(variant.sizeMl) && (variant.sizeMl ?? 0) > 0,
+    )
+    .map((variant, index) => ({
+      id: variant.id ?? `${(draft.id ?? draft.slug) || 'draft'}-${variant.variantType}-${variant.sizeMl}-${index}`,
+      variantType: variant.variantType,
+      sizeMl: variant.sizeMl,
+      sku: variant.sku,
+      priceLkr: variant.priceLkr,
+      priceNeedsConfiguration: variant.priceNeedsConfiguration,
+      stockQuantity: variant.stockQuantity,
+      stockNeedsConfiguration: variant.stockNeedsConfiguration,
+      isActive: variant.isActive,
+    }))
+    .sort((left, right) => {
+      if (left.variantType !== right.variantType) {
+        return left.variantType === 'decant' ? -1 : 1;
+      }
+      return left.sizeMl - right.sizeMl;
+    });
+
+  return {
+    id: (draft.id ?? draft.slug) || 'draft-preview',
+    slug: draft.slug || 'draft-preview',
+    number: typeof config.number === 'string'
+      ? config.number
+      : String(draft.displayOrder).padStart(2, '0'),
+    name: draft.name,
+    brand: draft.brand,
+    house: typeof config.houseDisplay === 'string' ? config.houseDisplay : draft.brand,
+    family: draft.fragranceFamily || undefined,
+    gender: draft.gender || undefined,
+    concentration: draft.concentration || undefined,
+    image: imageOverride ?? (draft.imageUrl ? resolveProductImageUrl(draft.imageUrl) : ''),
+    theme: readTheme(config),
+    description: draft.description,
+    story: typeof config.story === 'string' ? config.story : '',
+    notes: [
+      { label: 'Top notes', notes: draft.topNotes },
+      { label: 'Heart notes', notes: draft.heartNotes },
+      { label: 'Base notes', notes: draft.baseNotes },
+    ],
+    visual: readVisual(config),
+    variants,
+    isFeatured: draft.isFeatured,
+  };
+}
 export function resolveProductImageUrl(imageUrl: string): string {
   if (/^(https?:|data:|blob:)/i.test(imageUrl)) return imageUrl;
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -255,6 +435,37 @@ export function resolveProductImageUrl(imageUrl: string): string {
 
 function throwIfError(error: { message: string } | null): void {
   if (error) throw new Error(error.message);
+}
+
+export async function assertProductSlugAvailable(
+  slug: string,
+  excludeProductId?: string,
+  client: SupabaseClient = getSupabaseClient(),
+): Promise<void> {
+  const { data, error } = await client
+    .from('products')
+    .select('id')
+    .eq('slug', slug)
+    .limit(2);
+  throwIfError(error);
+
+  const matches = (data ?? []) as Array<{ id: string }>;
+  if (matches.some((product) => product.id !== excludeProductId)) {
+    throw new Error('That URL slug is already in use. Choose a different slug.');
+  }
+}
+
+function formatProductCreationError(error: { message: string; code?: string }): string {
+  if (error.code === 'PGRST202' || error.code === '42883') {
+    return 'The atomic product-creation migration is not available yet. Apply the pending NIDOR catalog migrations, then try again.';
+  }
+  if (error.code === '23505' && error.message.includes('products_slug_key')) {
+    return 'That URL slug is already in use. Choose a different slug.';
+  }
+  if (error.code === '23505' && error.message.includes('product_variants_sku_key')) {
+    return 'That SKU is already in use. Enter a different SKU for this format.';
+  }
+  return error.message;
 }
 
 export async function fetchPublicFragrances(): Promise<Fragrance[]> {
@@ -286,11 +497,10 @@ export async function checkProductAdminAccess(): Promise<boolean> {
 }
 
 export async function requestAdminSignIn(email: string): Promise<void> {
-  const redirectTo = buildAdminSignInRedirectUrl({
-    currentOrigin: window.location.origin,
-    basePath: import.meta.env.BASE_URL,
-    replitDevDomain: import.meta.env.VITE_REPLIT_DEV_DOMAIN,
-  });
+  const redirectTo = new URL(
+    `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}admin/products`,
+    window.location.origin,
+  ).toString();
   const { error } = await getSupabaseClient().auth.signInWithOtp({
     email: email.trim().toLowerCase(),
     options: {
@@ -306,11 +516,49 @@ export async function signOutAdmin(): Promise<void> {
   throwIfError(error);
 }
 
-export async function saveAdminProduct(draft: ProductDraft): Promise<ProductRecord> {
-  const client = getSupabaseClient();
+export async function saveAdminProduct(
+  draft: ProductDraft,
+  client: SupabaseClient = getSupabaseClient(),
+  imageFile?: File,
+): Promise<ProductRecord> {
+  const validationError = validateProductDraft(draft, Boolean(imageFile));
+  if (validationError) throw new Error(validationError);
+  if (imageFile) {
+    const imageValidationError = validateProductImageFile(imageFile);
+    if (imageValidationError) throw new Error(imageValidationError);
+  }
+
+  const { error: typeColumnError } = await client
+    .from('product_variants')
+    .select('variant_type')
+    .limit(0);
+  const supportsVariantTypes = !typeColumnError;
+  if (typeColumnError && typeColumnError.code !== 'PGRST204' && typeColumnError.code !== '42703') {
+    throw new Error(typeColumnError.message);
+  }
+  if (!supportsVariantTypes && (!draft.id || draft.variants.some((variant) =>
+    variant.variantType === 'full_bottle' && variant.sizeMl !== null,
+  ))) {
+    throw new Error('Apply the full-bottle catalog migration before saving product variants.');
+  }
+
+  const { error: thresholdColumnError } = await client
+    .from('product_variants')
+    .select('low_stock_threshold')
+    .limit(0);
+  if (thresholdColumnError) {
+    if (thresholdColumnError.code === 'PGRST204' || thresholdColumnError.code === '42703') {
+      throw new Error('Apply the low-stock threshold migration before saving product variants.');
+    }
+    throw new Error(thresholdColumnError.message);
+  }
+
+  const productSlug = draft.slug.trim().toLowerCase();
+  await assertProductSlugAvailable(productSlug, draft.id, client);
+
   const productPayload = {
     name: draft.name.trim(),
-    slug: draft.slug.trim().toLowerCase(),
+    slug: productSlug,
     brand: draft.brand.trim(),
     description: draft.description.trim(),
     fragrance_family: draft.fragranceFamily.trim() || null,
@@ -329,36 +577,116 @@ export async function saveAdminProduct(draft: ProductDraft): Promise<ProductReco
     display_order: draft.displayOrder,
   };
 
-  const productResult = draft.id
-    ? await client.from('products').update(productPayload).eq('id', draft.id).select('id').single()
-    : await client.from('products').insert(productPayload).select('id').single();
+  const variantPayloads = draft.variants.flatMap((variant) => {
+    const sizeMl = variant.sizeMl ?? (variant.id ? variant.originalSizeMl ?? null : null);
+    if (sizeMl === null) return [];
+    const variantType = variant.variantType;
+    const autoSku = variantType === 'full_bottle'
+      ? `${productPayload.slug}-full-bottle-${sizeMl}ml`
+      : `${productPayload.slug}-${sizeMl}ml`;
+    return [{
+      ...(variant.id ? { id: variant.id } : {}),
+      ...(supportsVariantTypes ? { variant_type: variantType } : {}),
+      size_ml: sizeMl,
+      sku: variant.sku.trim() || autoSku,
+      price_lkr: variant.priceNeedsConfiguration ? null : variant.priceLkr,
+      price_needs_configuration: variant.priceNeedsConfiguration || variant.priceLkr === null,
+      stock_quantity: variant.stockNeedsConfiguration ? 0 : variant.stockQuantity,
+      stock_needs_configuration: variant.stockNeedsConfiguration,
+      low_stock_threshold: variant.lowStockThreshold,
+      is_active: variant.sizeMl === null && variant.id ? false : variant.isActive,
+    }];
+  });
 
-  if (productResult.error) throw new Error(productResult.error.message);
-  const productId = productResult.data?.id;
-  if (typeof productId !== 'string') {
-    throw new Error('Supabase did not return the saved product ID.');
+  const uploadedImage = imageFile
+    ? await uploadProductImageAsset(productSlug, imageFile, client)
+    : null;
+  productPayload.image_url = uploadedImage?.publicUrl ?? draft.imageUrl.trim();
+
+  if (!draft.id) {
+    if (!supportsVariantTypes) {
+      throw new Error('Apply the full-bottle catalog migration before adding a perfume.');
+    }
+    const createVariants = variantPayloads.map((row) => {
+      const { id, ...variant } = row;
+      if (id) throw new Error('A new perfume cannot reuse existing variant IDs.');
+      return variant;
+    });
+    const { data: createdId, error: createError } = await client.rpc(
+      'nidor_create_product_with_variants',
+      {
+        p_product: productPayload,
+        p_variants: createVariants,
+      },
+    );
+
+    if (createError) {
+      const message = formatProductCreationError(createError);
+      if (uploadedImage && createError.code) {
+        try {
+          await removeProductImage(uploadedImage.path, client);
+        } catch (cleanupError) {
+          throw new Error(
+            `${message} The database rejected the creation, but the uploaded image could not be removed: ${
+              cleanupError instanceof Error ? cleanupError.message : 'unknown storage error'
+            }`,
+          );
+        }
+      } else if (uploadedImage) {
+        throw new Error(
+          `${message} The save outcome could not be confirmed, so the uploaded image was kept. Refresh the catalogue before retrying.`,
+        );
+      }
+      throw new Error(message);
+    }
+
+    if (typeof createdId !== 'string') {
+      throw new Error('The creation request returned no product ID. Refresh the catalogue before retrying.');
+    }
+    const { data, error } = await client
+      .from('products')
+      .select(productSelect)
+      .eq('id', createdId)
+      .single();
+    if (error) {
+      throw new Error(`Product and variants were created, but the product could not be reloaded: ${error.message}`);
+    }
+    return data as unknown as ProductRecord;
   }
 
-  const variantRows = draft.variants.map((variant) => ({
-    ...(variant.id ? { id: variant.id } : {}),
-    product_id: productId,
-    size_ml: variant.sizeMl,
-    sku: `${productPayload.slug}-${variant.sizeMl}ml`,
-    price_lkr: variant.priceNeedsConfiguration ? null : variant.priceLkr,
-    price_needs_configuration: variant.priceNeedsConfiguration || variant.priceLkr === null,
-    stock_quantity: variant.stockQuantity,
-    stock_needs_configuration: variant.stockNeedsConfiguration,
-    is_active: variant.isActive,
-  }));
+  const productResult = await client
+    .from('products')
+    .update(productPayload)
+    .eq('id', draft.id)
+    .select('id')
+    .single();
+  if (productResult.error) throw new Error(productResult.error.message);
+  const productId = productResult.data?.id;
+  if (typeof productId !== 'string') throw new Error('Supabase did not return the saved product ID.');
 
-  const variantResult = await client
-    .from('product_variants')
-    .upsert(variantRows, { onConflict: 'product_id,size_ml' });
-
-  if (variantResult.error) {
-    throw new Error(
-      `Product details were saved, but variant changes failed: ${variantResult.error.message}`,
-    );
+  const variantRows = variantPayloads.map((row) => ({ ...row, product_id: productId }));
+  const existingRows = variantRows.filter((row) => 'id' in row && typeof row.id === 'string');
+  const newRows = variantRows.filter((row) => !('id' in row) || typeof row.id !== 'string');
+  for (const row of existingRows) {
+    const { id, ...payload } = row;
+    const { error } = await client.from('product_variants').update(payload).eq('id', id).eq('product_id', productId);
+    if (error) {
+      throw new Error(
+        `Product details were saved, but a later variant update failed. Earlier variant changes may also have been saved: ${error.message}`,
+      );
+    }
+  }
+  if (newRows.length) {
+    const { error } = await client.from('product_variants').upsert(newRows, {
+      onConflict: supportsVariantTypes
+        ? 'product_id,variant_type,size_ml'
+        : 'product_id,size_ml',
+    });
+    if (error) {
+      throw new Error(
+        `Product details were saved, but new variant changes failed. Earlier variant changes may also have been saved: ${error.message}`,
+      );
+    }
   }
 
   const { data, error } = await client
@@ -367,41 +695,66 @@ export async function saveAdminProduct(draft: ProductDraft): Promise<ProductReco
     .eq('id', productId)
     .single();
 
-  throwIfError(error);
+  if (error) {
+    throw new Error(`Product and variant changes were saved, but the updated product could not be reloaded: ${error.message}`);
+  }
   return data as unknown as ProductRecord;
 }
 
 const acceptedImageTypes = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const maxProductImageBytes = 10 * 1024 * 1024;
 
-export async function uploadProductImage(slug: string, file: File): Promise<string> {
+export function validateProductImageFile(file: Pick<File, 'type' | 'size'>): string | null {
   if (!acceptedImageTypes.has(file.type)) {
-    throw new Error('Choose a PNG, JPEG, or WebP image.');
+    return 'Choose a PNG, JPEG, or WebP image.';
   }
   if (file.size > maxProductImageBytes) {
-    throw new Error('Product images must be 10 MB or smaller.');
+    return 'Product images must be 10 MB or smaller.';
   }
+  return null;
+}
 
+export async function uploadProductImageAsset(
+  slug: string,
+  file: File,
+  client: SupabaseClient = getSupabaseClient(),
+): Promise<UploadedProductImage> {
+  const validationError = validateProductImageFile(file);
+  if (validationError) throw new Error(validationError);
   const safeFilename = file.name
     .normalize('NFKD')
     .replace(/[^a-zA-Z0-9._-]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(-120) || 'product-image';
-  const objectPath = `${slug.trim().toLowerCase()}/${safeFilename}`;
-  const { error } = await getSupabaseClient()
-    .storage
-    .from('product-images')
-    .upload(objectPath, file, {
+  const objectPath = `${slug.trim().toLowerCase()}/${crypto.randomUUID()}-${safeFilename}`;
+  const bucket = client.storage.from('product-images');
+  const { error } = await bucket.upload(objectPath, file, {
       cacheControl: '3600',
       contentType: file.type,
-      upsert: true,
+      upsert: false,
     });
 
   throwIfError(error);
-  return getSupabaseClient().storage.from('product-images').getPublicUrl(objectPath).data.publicUrl;
+  return {
+    path: objectPath,
+    publicUrl: bucket.getPublicUrl(objectPath).data.publicUrl,
+  };
 }
 
-export async function uploadExistingProductImage(product: ProductRecord): Promise<string> {
+export async function uploadProductImage(slug: string, file: File): Promise<string> {
+  const uploaded = await uploadProductImageAsset(slug, file);
+  return uploaded.publicUrl;
+}
+
+export async function removeProductImage(
+  path: string,
+  client: SupabaseClient = getSupabaseClient(),
+): Promise<void> {
+  const { error } = await client.storage.from('product-images').remove([path]);
+  throwIfError(error);
+}
+
+export async function downloadExistingProductImage(product: ProductRecord): Promise<File> {
   if (/\/storage\/v1\/object\/public\/product-images\//.test(product.image_url)) {
     throw new Error('This image is already stored in Supabase Storage.');
   }
@@ -411,8 +764,7 @@ export async function uploadExistingProductImage(product: ProductRecord): Promis
 
   const blob = await response.blob();
   const filename = product.image_url.split('/').pop() || `${product.slug}.png`;
-  const file = new File([blob], filename, {
+  return new File([blob], filename, {
     type: blob.type || 'image/png',
   });
-  return uploadProductImage(product.slug, file);
 }

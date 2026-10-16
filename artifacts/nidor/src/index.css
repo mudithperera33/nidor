@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -37,6 +36,27 @@
   --app-font-sans: 'Plus Jakarta Sans', sans-serif;
   --app-font-serif: 'Instrument Serif', Georgia, serif;
   --app-font-mono: 'DM Mono', monospace;
+  --nidor-paper: #f4efe5;
+  --nidor-paper-soft: #fbf8f2;
+  --nidor-paper-deep: #ebe2d3;
+  --nidor-paper-admin: #f0ecdf;
+  --nidor-ink: #28231e;
+  --nidor-ink-soft: #5f584f;
+  --nidor-border: #c5bdaf;
+  --nidor-accent: #76572f;
+  --nidor-accent-strong: #614725;
+  --nidor-focus: #604622;
+  --nidor-danger: #873d35;
+  --nidor-success: #385b41;
+  --nidor-hero-surface: #e9deca;
+  --nidor-hero-glow: #f1e8d9;
+  --nidor-hero-glow-mid: #dac8a9;
+  --nidor-hero-glow-end: #d3bf9d;
+  --nidor-card-light: #eee5d7;
+  --nidor-card-shadow: #ded0b8;
+  --nidor-type-body: 1rem;
+  --nidor-type-control: .875rem;
+  --nidor-type-label: .75rem;
   --radius: .2rem;
   --ink: #201b17;
   --ivory: #f1eadc;
@@ -101,22 +121,25 @@ button { font: inherit; }
   background: transparent;
   color: currentColor;
   cursor: pointer;
-  font-family: var(--app-font-mono);
-  font-size: 9px;
-  letter-spacing: .16em;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
 .nav-link { transition: opacity .25s ease; }
 .nav-link:hover { opacity: .55; }
+.nav-link[aria-current="page"] { border-bottom: 1px solid currentColor; padding-bottom: 7px; }
 .nav-cta, .cart-button {
   border: 1px solid currentColor;
   padding: 11px 14px;
   background: transparent;
   color: currentColor;
   cursor: pointer;
-  font-family: var(--app-font-mono);
-  font-size: 9px;
-  letter-spacing: .13em;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
   text-transform: uppercase;
   transition: background .25s ease, color .25s ease;
 }
@@ -565,6 +588,21 @@ button { font: inherit; }
   height: 100%;
   object-fit: contain;
   filter: blur(var(--product-blur, 0px)) drop-shadow(0 30px 28px rgba(18,15,15,.18));
+  transform: translateZ(20px);
+}
+.product-image-placeholder {
+  position: relative;
+  z-index: 1;
+  width: min(90%, 360px);
+  height: min(60vh, 470px);
+  display: grid;
+  place-items: center;
+  border: 1px dashed color-mix(in srgb, var(--world-foreground) 35%, transparent);
+  color: color-mix(in srgb, var(--world-foreground) 65%, transparent);
+  font-family: var(--app-font-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
   transform: translateZ(20px);
 }
 .scene-copy {

@@ -1,0 +1,371 @@
+# NIDOR — FULL BOTTLE INVENTORY, THEME CONSISTENCY, AND TYPOGRAPHY REFINEMENT
+
+## IMPORTANT: WORK IN THIS ORDER
+
+Before building or extending the admin product creation form, complete these three tasks:
+
+1. Extend the database and storefront to support full bottles.
+2. Fix theme consistency across the entire website.
+3. Improve typography and remove the generic AI-generated visual appearance.
+
+Audit the existing codebase first. Reuse the existing Supabase project, database schema, authentication, product data, and design components.
+
+Do not reset the database, duplicate products, or remove existing data.
+
+Do not change the approved cinematic fragrance worlds or their animations.
+
+---
+
+# PART 1 — FULL BOTTLE INVENTORY AND PRICING
+
+## 1. Extend the existing product variant system
+
+The website currently supports 5 ml and 10 ml decants.
+
+I also need to sell the original, full-size perfume bottles.
+
+The product purchasing options must support:
+
+- 5 ml decant
+- 10 ml decant
+- Full bottle
+
+Do not treat the full bottle as another decant size.
+
+Use an explicit variant type or equivalent structure, for example:
+
+- variant_type: decant or full_bottle
+- size_ml: nullable or populated according to the variant
+- price_lkr
+- stock_quantity
+- sku
+- is_active
+
+Keep the schema consistent with the existing database implementation.
+
+The existing 5 ml and 10 ml variants must continue to work without breaking existing records.
+
+## 2. Full-bottle product fields
+
+Each product must support a full-bottle variant with:
+
+- Full bottle volume in ml
+- Full bottle price in LKR
+- Full bottle stock quantity
+- Full bottle SKU
+- Full bottle availability
+
+The full bottle volume must be configurable per product because different fragrances may come in different bottle sizes.
+
+Do not assume all full bottles are 100 ml.
+
+Allow the administrator to enter the actual bottle volume and the actual selling price.
+
+Do not invent full-bottle prices or stock quantities.
+
+Do not assume a full bottle is available merely because the product itself is published.
+
+## 3. Database migration
+
+Inspect the current Supabase schema before making changes.
+
+Create a safe, version-controlled SQL migration that extends the existing product variant system.
+
+Requirements:
+
+- Preserve all existing products and variant IDs.
+- Preserve existing 5 ml and 10 ml prices.
+- Preserve existing stock quantities.
+- Avoid destructive changes.
+- Add appropriate constraints and indexes.
+- Keep prices as NUMERIC values.
+- Enforce nonnegative prices and stock.
+- Enforce uniqueness for each product's variant type and size combination.
+- Ensure full-bottle variants can have different volumes for different products.
+
+If the existing schema makes a clean migration difficult, propose the safest compatible schema rather than blindly altering columns.
+
+Do not claim the migration was applied unless it was actually applied and verified.
+
+## 4. Update the storefront
+
+Update every relevant product-purchasing interface to support all available variants.
+
+The user should see the available options, for example:
+
+5 ml
+10 ml
+Full bottle — 100 ml
+
+The actual volume must come from the database.
+
+When a user selects an option:
+
+- Display the correct price.
+- Display the correct availability.
+- Use the correct stock quantity.
+- Update the selected variant.
+- Ensure the cart stores the selected variant ID.
+- Prevent purchasing inactive or out-of-stock variants.
+
+Do not display all three options if a variant is not configured or is inactive.
+
+Display the full-bottle price clearly without confusing it with the decant price.
+
+If the original perfume bottle has its own existing product image, use that image. Otherwise, use the appropriate existing product image without inventing a new image.
+
+## 5. Update the future admin product form
+
+Make sure the product creation and editing forms support all three purchasing options.
+
+For each perfume, an administrator must be able to:
+
+- Enable or disable the 5 ml decant.
+- Set the 5 ml price and stock.
+- Enable or disable the 10 ml decant.
+- Set the 10 ml price and stock.
+- Enable or disable full-bottle sales.
+- Enter the actual full-bottle volume.
+- Set the full-bottle price and stock.
+- Set or generate an appropriate SKU.
+
+Each variant must be managed independently.
+
+A product can have any valid combination of these variants.
+
+For example, a product might sell only 5 ml and full bottles, while another might sell all three.
+
+Do not require every product to offer all three options.
+
+## 6. Data integrity and security
+
+The frontend must not be trusted to determine final prices or available stock.
+
+Use the existing secure server/database architecture to validate variant IDs, prices, availability, and inventory.
+
+Maintain appropriate Supabase RLS policies.
+
+Never expose the service-role key to the browser.
+
+Do not allow public users to change product prices or stock.
+
+---
+
+# PART 2 — FIX THE WEBSITE'S COLOR CONSISTENCY
+
+## 1. Audit the entire existing website
+
+Inspect all existing pages and components:
+
+- Homepage
+- Navigation bar
+- Mobile navigation
+- Shopping catalogue
+- Product cards
+- Search and filter controls
+- Buttons
+- Cart
+- Admin dashboard
+- All five cinematic fragrance worlds
+- Order interfaces
+- Footer
+- Modals and dropdowns
+
+The current colors do not feel consistent or sufficiently polished.
+
+I want the navigation, typography, buttons, borders, surfaces, and supporting elements to look as though they belong to the same professionally art-directed brand.
+
+Do not randomly choose colors or apply one color scheme to every fragrance.
+
+## 2. Establish a centralized design system
+
+Create or refine shared design tokens for:
+
+- Main background
+- Secondary background
+- Primary text
+- Secondary text
+- Accent color
+- Button background
+- Button text
+- Border color
+- Input background
+- Navigation background
+- Navigation text
+- Focus and hover states
+
+Use the existing project conventions, such as CSS variables or theme configuration.
+
+Avoid duplicating color values across individual components.
+
+## 3. Match each navigation bar to its context
+
+Inspect the actual background and content behind every navigation bar.
+
+Choose colors based on contrast, harmony, and the active visual theme.
+
+Examples:
+
+- On the ivory/champagne homepage, use a warm ivory or appropriately translucent neutral surface with readable dark text.
+- In the Hawas Gold Digger world, coordinate the navigation with the established blue-and-gold palette.
+- In Club de Nuit Woman, coordinate with blush, champagne, and rose gold.
+- In Yara, coordinate with the existing soft pink and rose palette.
+- In Hawas Chrome, coordinate with silver, ice, chrome, and charcoal.
+- In Club de Nuit Intense Man, coordinate with black, charcoal, and restrained gold.
+
+These are examples, not permission to redesign the approved fragrance worlds.
+
+Preserve the existing product themes.
+
+The navigation should adapt to the current page or fragrance where appropriate.
+
+## 4. Fix contrast and readability
+
+For every combination of background and text:
+
+- Ensure sufficient contrast.
+- Make navigation links clearly readable.
+- Make active states easy to identify.
+- Ensure hover and focus states remain visible.
+- Make dropdowns and inputs visually consistent.
+- Avoid low-contrast champagne text on cream backgrounds.
+- Avoid pale text on bright backgrounds.
+- Avoid gold text for long passages when it reduces readability.
+
+Do not rely on opacity alone to distinguish important text.
+
+Do not use arbitrary gradients or excessive glassmorphism.
+
+Use transparency only when it genuinely improves the composition.
+
+## 5. Avoid overusing gold
+
+Gold is a brand accent, not the background color for everything.
+
+Use it selectively for details, borders, small icons, or important accents where appropriate.
+
+Do not turn every button, heading, navigation item, and card into a gold element.
+
+The overall aesthetic should feel sophisticated, restrained, and intentional.
+
+---
+
+# PART 3 — TYPOGRAPHY REFINEMENT
+
+## 1. Remove the generic AI-template appearance
+
+The current website's text looks too small and some of the typography feels generic.
+
+Improve the typographic hierarchy so the website feels deliberately designed by a professional luxury brand art director.
+
+Do not simply enlarge every text element.
+
+Use different type treatments for different purposes.
+
+## 2. Establish a consistent font system
+
+Inspect the existing fonts and font-loading setup.
+
+Use a restrained pairing:
+
+- An elegant editorial serif for major headings, fragrance names, and selected brand statements.
+- A clean, highly readable sans-serif for navigation, product descriptions, prices, labels, filters, and controls.
+
+Prefer a distinctive but legible combination rather than a generic default font pairing.
+
+Use fonts that are legally available to the project and load them efficiently.
+
+Do not use multiple decorative fonts unnecessarily.
+
+Do not use thin, low-weight text for important information.
+
+## 3. Establish a clear type hierarchy
+
+Use responsive typography appropriate to each component.
+
+Suggested starting points for desktop:
+
+- Major page headings: approximately 44–64 px.
+- Product or fragrance headings: approximately 32–48 px.
+- Section headings: approximately 26–36 px.
+- Body text: approximately 16–19 px.
+- Navigation and product-card labels: approximately 14–16 px.
+- Secondary metadata: generally 13–14 px, provided it remains readable.
+- Prices: approximately 18–24 px, depending on prominence.
+
+These are starting points, not rigid values.
+
+Adjust sizes based on the actual layout and font metrics.
+
+On mobile, scale appropriately without making text tiny.
+
+Use a consistent line-height and letter-spacing system.
+
+## 4. Improve font weights and readability
+
+Avoid:
+
+- Extremely thin body text
+- Excessive letter spacing
+- Tiny uppercase labels everywhere
+- Long paragraphs in all caps
+- Excessively narrow text columns
+- Inconsistent font weights between similar components
+- Too many font sizes with no hierarchy
+
+Use appropriate medium or semibold weights for important navigation, prices, product names, and controls.
+
+Keep decorative letter spacing primarily for short editorial labels.
+
+## 5. Improve product cards and shopping typography
+
+In the shopping catalogue:
+
+- Make fragrance names readable at a glance.
+- Give prices sufficient prominence.
+- Keep brand names secondary to product names.
+- Make size selectors easy to understand.
+- Make stock and availability readable.
+- Use consistent alignment across product cards.
+- Prevent long product names from colliding with prices or controls.
+
+Prioritize usability over decoration.
+
+## 6. Preserve the approved fragrance-world typography
+
+The cinematic fragrance worlds already look good.
+
+Do not redesign their existing text compositions, heading sizes, scene transitions, or text placement unless a specific readability issue requires it.
+
+The goal is to bring the rest of the website up to a consistent professional standard, not to undo approved work.
+
+---
+
+# PART 4 — IMPLEMENTATION AND TESTING
+
+Before finishing:
+
+1. Verify the database migration is safe.
+2. Verify existing 5 ml and 10 ml variants still work.
+3. Verify full-bottle variants can be created and edited.
+4. Verify full-bottle volume, price, and stock are displayed correctly.
+5. Verify the selected variant is preserved when adding an item to the cart.
+6. Verify inactive and out-of-stock variants cannot be purchased.
+7. Inspect navigation colors on every page.
+8. Inspect typography on desktop and mobile.
+9. Check text contrast on every theme.
+10. Check that the shopping catalogue remains easy to browse.
+11. Verify the existing cinematic fragrance worlds remain unchanged.
+12. Check for broken images, console errors, and horizontal overflow.
+
+Do not create fake products, prices, or inventory to make the interface look complete.
+
+## FINAL REQUIREMENT
+
+Complete the database and full-bottle support first.
+
+Then implement the shared theme and typography refinements.
+
+Keep the NIDOR brand recognizable and the existing cinematic perfume experiences intact.
+
+At the end, report the schema changes, migration status, files modified, tests performed, and any remaining manual setup.

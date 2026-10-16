@@ -1,0 +1,281 @@
+# NIDOR — SIMPLE ADMIN PRODUCT CREATION AND DATABASE MANAGEMENT
+
+## OBJECTIVE
+
+Upgrade the existing NIDOR admin dashboard so I can easily add new perfumes, set prices for 5 ml and 10 ml decants, manage stock, upload product images, and publish products directly to the website.
+
+I should not need to edit source code or manually insert records into Supabase whenever I add a perfume.
+
+**The admin dashboard must save directly to the existing Supabase database.**
+
+This must integrate with the homepage and shopping catalogue restructuring.
+
+## 1. AUDIT BEFORE IMPLEMENTING
+
+Inspect the existing project first.
+
+- Find the current admin dashboard and authentication system.
+- Inspect the existing Supabase client and database schema.
+- Identify the products and product variants tables.
+- Inspect existing product creation, editing, image storage, and RLS policies.
+- Reuse existing implementations wherever possible.
+
+Do not create duplicate tables, duplicate products, or a second Supabase client.
+
+Do not reset the database or remove existing data.
+
+If a required database migration is missing, create a safe, version-controlled migration and report whether it has actually been applied.
+
+## 2. ADD A PROMINENT "ADD PERFUME" BUTTON
+
+Add a clearly visible **+ Add Perfume** button to the admin product dashboard.
+
+Clicking it should open a clean product creation form.
+
+The form must be easy to use, logically grouped, and suitable for someone who does not know SQL or programming.
+
+Use the existing admin design system.
+
+## 3. PRODUCT INFORMATION FORM
+
+### Basic information
+
+Fields:
+
+- Perfume name — required
+- Brand — required
+- URL slug — automatically suggested from the name, but editable
+- Short description
+- Fragrance family
+- Gender/audience: Men, Women, Unisex
+- Concentration: optional
+- Top notes
+- Heart notes
+- Base notes
+- Featured product toggle
+- Publish product toggle
+- Display order
+
+Allow fragrance notes to be entered easily as separate items or comma-separated values, and store them in the format expected by the existing database.
+
+Do not require optional information that is not available.
+
+### Product image
+
+Provide an image upload area with:
+
+- Drag-and-drop support where practical
+- File picker
+- Image preview
+- Replace image option
+- Clear validation messages
+
+Support PNG, JPEG, and WebP images.
+
+Preserve transparent backgrounds on bottle PNGs.
+
+Upload the image to the existing Supabase Storage bucket, or create an appropriate bucket if necessary.
+
+Store the resulting image path or URL in the product record.
+
+Only authorized administrators may upload, replace, or delete product images.
+
+Do not require me to manually paste image URLs.
+
+If image upload fails, explain the error and do not publish a broken product.
+
+## 4. SIMPLE VARIANT AND PRICE MANAGEMENT
+
+Every perfume must support two decant sizes:
+
+- 5 ml
+- 10 ml
+
+Display a clear pricing section:
+
+| Size | Price (LKR) | Stock quantity | Available |
+| 5 ml | Editable | Editable | Toggle |
+| 10 ml | Editable | Editable | Toggle |
+
+Requirements:
+
+- I can enter a different price for each size.
+- I can set stock quantities independently.
+- I can activate or deactivate either size.
+- Prices must be stored as numeric monetary values.
+- Prices cannot be negative.
+- Stock quantities must be nonnegative whole numbers.
+- Do not automatically assume both variants are in stock.
+- Do not invent prices or stock quantities.
+
+Allow zero stock for an unavailable variant.
+
+Validate required fields before saving.
+
+## 5. SAVE EVERYTHING TO SUPABASE
+
+When I click **Save Perfume**, the application must:
+
+1. Validate the form.
+2. Validate the slug and check for duplicates.
+3. Upload the product image if a new image was selected.
+4. Create the product record.
+5. Create its 5 ml variant.
+6. Create its 10 ml variant.
+7. Save all prices and stock quantities.
+8. Save the fragrance notes and other product information.
+9. Save the publish and featured settings.
+10. Refresh the admin product list using the saved database records.
+
+Use the actual schema and relationships already present in the project.
+
+Perform related database writes safely, ideally in a transaction or through a secure server-side operation/RPC where appropriate.
+
+If any step fails, do not leave a partially created product with missing variants. Handle rollback or cleanup appropriately and show a useful error message.
+
+Do not display a success notification until the save has actually succeeded.
+
+## 6. AUTOMATICALLY UPDATE THE WEBSITE
+
+Once a perfume is saved and published, it must automatically become available in the public shopping catalogue.
+
+The new perfume should display:
+
+- Its correct image
+- Name and brand
+- Description
+- Fragrance notes
+- 5 ml price
+- 10 ml price
+- Availability
+
+It should appear according to the existing product sorting and display-order rules.
+
+Do not hardcode the five existing fragrances into the shopping page.
+
+The system must support adding more products in the future without code changes.
+
+If a product is saved as unpublished, it should remain accessible to authorized administrators but not appear publicly.
+
+If the product is published but a variant is inactive or out of stock, the relevant purchasing controls must reflect that state.
+
+Do not allow the public storefront to bypass stock or price validation.
+
+## 7. EDIT EXISTING PERFUMES
+
+The admin dashboard must also let me open any existing perfume and edit it.
+
+I must be able to update:
+
+- Name and brand
+- Description and fragrance notes
+- Product image
+- 5 ml price
+- 10 ml price
+- Stock quantities
+- Variant availability
+- Publish status
+- Featured status
+- Display order
+
+Saving changes must update the existing database records rather than create duplicate products or variants.
+
+Product identifiers and existing URLs should remain stable when editing unrelated fields.
+
+If a slug changes, handle the URL change carefully so existing product links are not broken unnecessarily.
+
+## 8. ADMIN PRODUCT LIST
+
+The dashboard should show a table or responsive list containing:
+
+- Product image
+- Name
+- Brand
+- 5 ml price
+- 10 ml price
+- Stock status
+- Published/unpublished status
+- Edit action
+
+Include search by product name and brand.
+
+Show useful indicators for:
+
+- Out of stock
+- Low stock, using a configurable threshold
+- Unpublished products
+
+Provide a confirmation before unpublishing a product.
+
+Avoid permanent deletion if the product is referenced by orders. Prefer archiving or unpublishing.
+
+## 9. SECURITY
+
+Preserve and enforce Supabase Row Level Security.
+
+- Only authenticated, authorized administrators can create or edit products.
+- Only authorized administrators can change prices and stock.
+- Never expose the Supabase service-role key in browser code.
+- Never rely solely on hiding admin buttons or checking a client-side role.
+- Do not let public users change product prices or inventory.
+- Do not disable RLS to make database operations succeed.
+
+Reuse the existing authentication and admin authorization system if present.
+
+## 10. PRESERVE THE EXISTING WEBSITE
+
+Do not modify the approved cinematic fragrance worlds.
+
+Do not change:
+
+- Bottle positioning
+- Scroll animations
+- Scene choreography
+- Typography
+- Fragrance themes
+- Existing product artwork
+- Approved transitions
+
+Implement the new admin functionality and connect it to the simplified homepage and shopping catalogue.
+
+Keep product information centralized in Supabase instead of duplicating it across components.
+
+## 11. TEST THE COMPLETE WORKFLOW
+
+Test this exact scenario:
+
+1. Log in as an authorized administrator.
+2. Click Add Perfume.
+3. Enter a test perfume name and brand.
+4. Upload a product image.
+5. Add a description and fragrance notes.
+6. Enter a 5 ml price and stock quantity.
+7. Enter a 10 ml price and stock quantity.
+8. Save the perfume.
+9. Confirm the product and both variants exist in Supabase.
+10. Refresh the admin page and confirm the product remains.
+11. Edit its price and stock and verify that changes persist.
+12. Publish the product and confirm it appears in the shopping catalogue.
+13. Unpublish it and confirm it disappears from the public catalogue.
+14. Verify that unauthorized users cannot perform these operations.
+15. Verify that all five existing fragrance experiences still work.
+
+Use a clearly identified test product and remove or archive it after testing, without touching the existing five products.
+
+## FINAL RESULT
+
+I want a simple workflow:
+
+ADMIN DASHBOARD
+→ ADD PERFUME
+→ ENTER DETAILS
+→ UPLOAD IMAGE
+→ SET 5 ML AND 10 ML PRICES
+→ SET STOCK
+→ SAVE
+→ PRODUCT STORED IN SUPABASE
+→ PUBLISHED PRODUCT AUTOMATICALLY APPEARS IN THE SHOP
+
+No manual SQL inserts. No editing source code to add products. No duplicate records. No invented prices or stock.
+
+Report what was implemented, which database operations were tested, and whether any migration or Supabase configuration still requires action.

@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: cart
+    description: Cart catalog validation
+  - name: orders
+    description: Guest order submission
 paths:
   /healthz:
     get:
@@ -24,6 +28,134 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /cart/validate:
+    post:
+      operationId: validateCart
+      tags: [cart]
+      summary: Validate cart variants against current catalog data
+      description: Reads active variants from the server database and returns authoritative prices and stock status. Does not reserve inventory or create an order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartValidationRequest"
+      responses:
+        "200":
+          description: Current catalog validation for each requested line
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartValidationResponse"
+        "400":
+          description: Invalid cart request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Catalog validation is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /orders:
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Place an order using current catalog prices and inventory
+      description: >-
+        Accepts buyer contact and delivery details with variant IDs and quantities.
+        Prices are read from the database inside the inventory transaction; client
+        prices are not accepted. Accepted orders reserve stock and remain pending payment.
+        Repeating the request with the same Idempotency-Key returns the original receipt.
+        Reusing a key with different order details is rejected.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: Stable UUID for this checkout attempt; reuse it only when retrying the same order.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "200":
+          description: The original receipt returned for a repeated checkout request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedOrderReceipt"
+        "201":
+          description: Order accepted and inventory reserved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedOrderReceipt"
+        "400":
+          description: Invalid order details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: A selected variant is no longer purchasable, or the key was reused with different order details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Order storage is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /orders/recover:
+    post:
+      operationId: recoverOrderReceipt
+      tags: [orders]
+      summary: Recover a saved order receipt
+      description: >-
+        Returns receipt details only when the order reference and checkout email
+        both match a saved order. Customer contact and delivery details are never
+        included. A non-matching pair receives the same response whether the order
+        reference or email is incorrect.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderReceiptLookup"
+      responses:
+        "200":
+          description: Receipt for the matching saved order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedOrderReceipt"
+        "400":
+          description: Invalid order reference or email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: No saved order matched those details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Order storage is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +165,180 @@ components:
           type: string
       required:
         - status
+    CartValidationRequest:
+      type: object
+      required: [lines]
+      properties:
+        lines:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/CartValidationInputLine"
+    CartValidationInputLine:
+      type: object
+      required: [variantId, quantity]
+      properties:
+        variantId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 99
+    CartValidationResponse:
+      type: object
+      required: [lines]
+      properties:
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartValidationLine"
+    CreateOrderRequest:
+      type: object
+      additionalProperties: false
+      required: [customerName, customerEmail, customerPhone, deliveryAddress, lines]
+      properties:
+        customerName:
+          type: string
+          minLength: 2
+          maxLength: 120
+        customerEmail:
+          type: string
+          format: email
+          maxLength: 320
+        customerPhone:
+          type: string
+          minLength: 7
+          maxLength: 40
+        deliveryAddress:
+          type: string
+          minLength: 8
+          maxLength: 800
+        lines:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/CartValidationInputLine"
+    OrderReceiptLookup:
+      type: object
+      additionalProperties: false
+      required: [orderId, customerEmail]
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        customerEmail:
+          type: string
+          format: email
+          maxLength: 320
+    CreatedOrderReceipt:
+      type: object
+      required: [orderId, status, subtotalLkr, lines]
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        receiptEmailStatus:
+          type: string
+          enum: [accepted, failed]
+          description: Present on order submission responses only; reports whether the receipt email provider accepted the message.
+        status:
+          type: string
+          enum: [pending_payment]
+        subtotalLkr:
+          type: number
+          minimum: 0
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreatedOrderLine"
+    CreatedOrderLine:
+      type: object
+      required: [variantId, productName, brand, variantType, sizeMl, quantity, unitPriceLkr, lineTotalLkr]
+      properties:
+        variantId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+        brand:
+          type: string
+        variantType:
+          type: string
+          enum: [decant, full_bottle]
+        sizeMl:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 99
+        unitPriceLkr:
+          type: number
+          minimum: 0
+        lineTotalLkr:
+          type: number
+          minimum: 0
+    CartValidationLine:
+      type: object
+      required: [variantId, quantity, status, canPurchase, product, variant]
+      properties:
+        variantId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
+        status:
+          type: string
+          enum: [valid, price_unconfigured, stock_unconfigured, out_of_stock, insufficient_stock, unavailable]
+        canPurchase:
+          type: boolean
+        product:
+          oneOf:
+            - $ref: "#/components/schemas/CartProductDetails"
+            - type: "null"
+        variant:
+          oneOf:
+            - $ref: "#/components/schemas/CartVariantDetails"
+            - type: "null"
+    CartProductDetails:
+      type: object
+      required: [slug, name, brand, imageUrl]
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        brand:
+          type: string
+        imageUrl:
+          type: string
+    CartVariantDetails:
+      type: object
+      required: [variantType, sizeMl, priceLkr, priceNeedsConfiguration, stockQuantity, stockNeedsConfiguration]
+      properties:
+        variantType:
+          type: string
+          enum: [decant, full_bottle]
+        sizeMl:
+          type: integer
+          minimum: 1
+        priceLkr:
+          type: ["number", "null"]
+          minimum: 0
+        priceNeedsConfiguration:
+          type: boolean
+        stockQuantity:
+          type: integer
+          minimum: 0
+        stockNeedsConfiguration:
+          type: boolean
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
 

@@ -7,7 +7,8 @@
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "test": "tsx --test src/components/admin-products-dashboard.test.ts src/components/admin-receipt-email-retries.test.ts src/components/fragrance-experience.test.ts src/hooks/use-cart.test.ts src/lib/low-stock.test.ts src/lib/product-catalog.test.ts src/lib/admin-receipt-retries.test.ts",
+    "typecheck": "tsc -b ../../lib/api-client-react && tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -41,7 +42,6 @@
     "@replit/vite-plugin-cartographer": "catalog:",
     "@replit/vite-plugin-dev-banner": "catalog:",
     "@replit/vite-plugin-runtime-error-modal": "catalog:",
-    "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@types/node": "catalog:",

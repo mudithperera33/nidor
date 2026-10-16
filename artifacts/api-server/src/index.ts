@@ -1,5 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { startOrderReceiptEmailRetryWorker } from "./lib/order-receipt-email-retries";
+import { startResendWebhookEventCleanupWorker } from "./lib/resend-receipt-webhook";
 
 const rawPort = process.env["PORT"];
 
@@ -14,6 +16,9 @@ const port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
+
+startOrderReceiptEmailRetryWorker();
+startResendWebhookEventCleanupWorker();
 
 app.listen(port, (err) => {
   if (err) {

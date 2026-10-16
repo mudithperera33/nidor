@@ -23,6 +23,7 @@ timeoutMs = 20000
 
 [userenv.shared]
 VITE_SUPABASE_URL = "https://jmqjlkxzmylvhixidqca.supabase.co"
+NIDOR_RECEIPT_FROM = "nidorbyscientists@gmail.com"
 
 [nix]
 channel = "stable-25_05"

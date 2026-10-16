@@ -1,0 +1,303 @@
+# NIDOR WEBSITE RESTRUCTURE — SIMPLIFY HOMEPAGE AND BUILD A REAL SHOPPING PAGE
+
+## OBJECTIVE
+
+Restructure the existing NIDOR website into two distinct experiences:
+
+1. A simple, premium homepage.
+2. A functional ecommerce shopping catalogue.
+
+The existing cinematic perfume worlds are already approved and must remain unchanged.
+
+This task is a structural improvement, not a complete redesign.
+
+## 1. PRESERVE THE EXISTING PERFUME WORLDS
+
+This is the highest-priority constraint.
+
+Do not modify the existing cinematic experiences for:
+
+- Rasasi Hawas Gold Digger
+- Armaf Club de Nuit Woman
+- Lattafa Yara
+- Rasasi Hawas Chrome
+- Armaf Club de Nuit Intense Man
+
+Preserve their animations, scroll choreography, typography, bottle positioning, transitions, colors, scenes, product information, and order interactions.
+
+Do not refactor their animation components unless strictly necessary for routing, and never change their appearance or behavior as part of this task.
+
+Test every fragrance experience after implementation.
+
+## 2. REPLACE THE CURRENT HOMEPAGE
+
+Remove the current elaborate homepage sequence, including:
+
+- Repeated logo presentations
+- Repeated brand-introduction scenes
+- Unnecessary "in stores" or collection announcement scenes
+- The layout displaying all perfume bottles side by side as the main hero
+- Redundant scroll-driven text sequences
+- Unnecessary homepage scenes and transitions
+
+Replace this with a simple, polished luxury homepage.
+
+### Homepage structure
+
+A. Header/navigation
+
+Display the NIDOR logo only once.
+
+Provide navigation links for:
+
+- Home
+- Shop
+- Fragrance Worlds
+- About NIDOR
+- Cart
+
+Use the existing official logo asset.
+
+Keep the header elegant, responsive, and consistent with the brand's ivory, champagne, black, and restrained gold palette.
+
+B. Hero section
+
+Create a clean, premium introduction with:
+
+- One prominent NIDOR logo or wordmark
+- One concise headline
+- One short supporting sentence
+- A primary "Shop All Fragrances" button
+- A secondary "Explore Fragrance Worlds" link
+
+Use the existing landscape image if appropriate.
+
+Do not repeat the logo elsewhere in the hero.
+
+Do not create multiple logo reveal scenes.
+
+Avoid excessive scrolling, pinned sections, and elaborate scroll choreography on the homepage.
+
+C. Featured fragrances
+
+Show a small, curated selection of existing fragrances.
+
+Use the exact existing bottle PNGs.
+
+Display product name, brand, price information when available, and a link to view the product.
+
+Keep this section simple and attractive.
+
+Do not display all five bottles in one oversized side-by-side hero composition.
+
+D. Shop call to action
+
+Include a clear link to the shopping catalogue.
+
+E. Footer
+
+Include the logo, navigation links, and relevant customer information links.
+
+Do not invent contact information, policies, or social accounts.
+
+## 3. CREATE A DEDICATED SHOPPING PAGE
+
+Create or update the /shop route.
+
+This should be a conventional ecommerce catalogue inspired by the usability of Daraz and Alibaba, adapted to NIDOR's premium fragrance branding.
+
+Do not imitate their branding or visual identity.
+
+### Shopping page layout
+
+- Clear "Shop Fragrances" heading
+- Search input
+- Product count
+- Category/filter controls
+- Sort control
+- Responsive product grid
+- Pagination or load-more functionality if required by the existing data size
+
+The page should prioritize usability and product discovery.
+
+### Product cards
+
+Each card must display:
+
+- Exact product image from the existing assets/database
+- Fragrance name
+- Brand
+- Price or price range for available sizes
+- 5 ml and 10 ml size options, where appropriate
+- Stock/availability status
+- View Product action
+- Add to Cart action if the existing cart system supports it correctly
+
+Do not invent prices, discounts, reviews, or stock availability.
+
+Read product information from the existing Supabase database if it is configured.
+
+Use the existing product data as a fallback only if the current architecture already supports one safely. Do not silently display fabricated data when a database request fails.
+
+### Product grid
+
+Use a responsive layout:
+
+- Desktop: approximately 3–4 columns depending on available width
+- Tablet: approximately 2–3 columns
+- Mobile: 2 columns when the cards remain readable; otherwise use one column
+
+Cards should have consistent image ratios, spacing, and alignment.
+
+Make product names and prices easy to read.
+
+Do not make the product images so large that browsing becomes impractical.
+
+### Search and filtering
+
+Implement working search by fragrance name and brand.
+
+Provide appropriate filters, such as:
+
+- All fragrances
+- For him
+- For her
+- Unisex
+- Brand, where useful
+
+Only expose filters supported by actual product data.
+
+Add sorting options such as name and price, using real database values.
+
+If a filter has no matching products, show a helpful empty state.
+
+## 4. PRODUCT DETAILS AND FRAGRANCE WORLDS
+
+Keep the distinction clear:
+
+- Shopping catalogue: fast, simple product discovery and purchasing.
+- Fragrance Worlds: immersive cinematic storytelling.
+
+Each product card should provide appropriate navigation to its product details or existing fragrance experience.
+
+If a product already has a dedicated cinematic route, reuse that route rather than creating a duplicate experience.
+
+Do not force users to pass through a long animated sequence just to browse or purchase a fragrance.
+
+Provide straightforward access to shopping and cart functionality from the navigation bar.
+
+## 5. DESIGN AND TRANSITIONS
+
+The shopping page must feel luxurious but remain practical.
+
+Use:
+
+- Existing NIDOR color palette
+- Existing fonts and design tokens
+- Subtle fade-ins
+- Gentle hover effects
+- Refined image transitions
+- Clear interactive states
+- Consistent spacing and borders
+
+Avoid:
+
+- Large scroll-triggered product transitions
+- Pinned shopping sections
+- Excessive parallax
+- Long blank scroll gaps
+- Animated prices or moving controls
+- Effects that delay access to products
+
+Animations must never interfere with clicking, selecting a size, adding to cart, or browsing.
+
+Honor reduced-motion accessibility preferences.
+
+## 6. NAVIGATION AND ROUTING
+
+Ensure navigation works correctly across the website.
+
+Required destinations:
+
+- Home
+- Shop
+- Fragrance Worlds
+- Individual existing fragrance experiences
+- Cart
+
+Use the project's existing router and conventions.
+
+Do not introduce a second routing system.
+
+The Shop link must be visible and accessible from the main navigation on desktop and mobile.
+
+If the mobile layout uses a menu, ensure Shop and Cart are easily accessible.
+
+Do not leave dead links or placeholder buttons.
+
+## 7. SUPABASE INTEGRATION
+
+Inspect the existing Supabase integration before making changes.
+
+If products and variants already exist in Supabase, use those records.
+
+Do not create duplicate tables, duplicate product entries, or a second database client.
+
+Read active products and their active variants.
+
+Display actual prices and availability.
+
+Do not allow public users to edit products or inventory.
+
+Preserve the existing database schema and security policies.
+
+If the database is not ready, report exactly what is missing instead of pretending the integration works.
+
+## 8. PERFORMANCE AND ACCESSIBILITY
+
+Ensure:
+
+- Responsive layouts
+- Optimized image loading
+- Appropriate image alt text
+- Keyboard-accessible navigation
+- Visible focus indicators
+- Accessible search and filters
+- Clear loading, error, and empty states
+- No horizontal overflow on mobile
+- No console errors
+- No broken image URLs
+
+## 9. TESTING
+
+After implementation, verify:
+
+1. The homepage displays the logo only once in its main brand introduction.
+2. The old repetitive homepage sequence is gone.
+3. Featured fragrances use the correct existing bottle assets.
+4. The Shop link opens the actual catalogue.
+5. Search and filters work.
+6. Product prices and size options are correct.
+7. Product links open the appropriate existing product/fragrance routes.
+8. Cart actions work if already implemented.
+9. All five cinematic fragrance experiences remain visually and functionally unchanged.
+10. Desktop and mobile navigation work.
+11. The existing Supabase connection and database security remain intact.
+
+Fix regressions before declaring completion.
+
+## FINAL RESULT
+
+NIDOR should have:
+
+A SIMPLE PREMIUM HOMEPAGE
++
+A PRACTICAL SHOPPING CATALOGUE
++
+THE EXISTING CINEMATIC FRAGRANCE WORLDS
+
+Do not turn the shopping page into another cinematic experience.
+
+Do not redesign the approved perfume worlds.
+
+Focus on clear navigation, product discovery, correct product data, and a premium but practical shopping experience.

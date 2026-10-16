@@ -1,0 +1,830 @@
+# NIDOR COMPLETE WEBSITE AUDIT — CURRENT STATE, TECHNICAL RISKS, ECOMMERCE GAPS, AND ROADMAP
+
+## ROLE
+
+Act as a senior full-stack software architect, ecommerce technical auditor, database specialist, security reviewer, UX/UI designer, and ecommerce business consultant.
+
+Your task is to conduct a comprehensive audit of the existing NIDOR perfume and fragrance-decant ecommerce website.
+
+You must inspect the ACTUAL PROJECT and determine its current state.
+
+Do not rely on assumptions, previous plans, intended features, comments in code, or what the project is supposed to do.
+
+Determine what is genuinely implemented and working.
+
+## CRITICAL RULE: AUDIT ONLY
+
+This is an audit and reporting task.
+
+DO NOT:
+
+- Modify application code.
+- Modify the database schema.
+- Apply database migrations.
+- Insert, update, or delete database records.
+- Change Supabase settings or policies.
+- Change environment variables.
+- Install or upgrade dependencies.
+- Redesign pages.
+- Implement suggested features.
+- Deploy the website.
+- Perform destructive or state-changing tests.
+
+You may inspect files, configuration, package dependencies, routes, components, SQL migrations, database objects, RLS policies, and available logs using safe, read-only methods.
+
+You may run existing read-only checks, type checks, lint checks, or build commands if they do not modify important project state.
+
+If a test could change data, trigger an external service, create an order, send an email, or affect production, do not run it without explicit authorization.
+
+If you cannot access a particular system or verify a claim, mark it as UNVERIFIED.
+
+Do not claim something works just because its code exists.
+
+---
+
+# PART 1 — EXECUTIVE SUMMARY
+
+Begin with a concise, evidence-based summary covering:
+
+1. What NIDOR currently is.
+2. What has actually been implemented.
+3. What is demonstrably functional.
+4. What is partially implemented.
+5. What is planned but not implemented.
+6. The most serious current problems.
+7. The biggest technical risks.
+8. The biggest ecommerce and business gaps.
+9. What must be fixed before accepting real customer orders.
+10. The five highest-priority next actions.
+
+Give the website an overall readiness assessment.
+
+Assess these separately:
+
+- Visual design
+- Frontend functionality
+- Backend functionality
+- Database readiness
+- Product and inventory management
+- Cart and checkout
+- Payment readiness
+- Delivery and fulfillment
+- Security
+- Mobile usability
+- Production deployment readiness
+
+Do not invent a numerical score without explaining the criteria.
+
+Use these statuses consistently:
+
+- VERIFIED WORKING
+- IMPLEMENTED BUT UNVERIFIED
+- PARTIALLY IMPLEMENTED
+- NOT IMPLEMENTED
+- BROKEN
+- BLOCKED
+- UNKNOWN
+
+---
+
+# PART 2 — PROJECT INVENTORY AND ARCHITECTURE
+
+Inspect the entire project structure.
+
+Identify:
+
+- Framework and frontend architecture
+- Programming languages
+- Build system
+- Routing system
+- Styling system
+- Animation libraries
+- Backend architecture
+- Database technology
+- Authentication system
+- Storage system
+- External APIs
+- Payment integrations
+- Deployment configuration
+- Environment variables required
+- Existing test infrastructure
+
+Produce a concise architecture diagram showing how the frontend, backend, Supabase, storage, authentication, and external services interact.
+
+Identify the important directories, components, configuration files, migrations, and entry points.
+
+For each major subsystem, explain:
+
+- What it does
+- Where it is implemented
+- Whether it is actually connected to the rest of the application
+- Whether it is complete
+- Its known risks
+
+Identify duplicated components, duplicated business logic, hardcoded data, dead code, unused dependencies, and conflicting implementations.
+
+Do not assume the latest implementation matches earlier project plans.
+
+---
+
+# PART 3 — IMPLEMENTED FEATURES AUDIT
+
+Inspect each feature individually.
+
+Create a table with these columns:
+
+- Feature
+- Implementation location
+- Current status
+- Evidence
+- Known issues
+- Required next action
+
+Audit at least the following.
+
+## A. Branding and visual experience
+
+- NIDOR logo usage
+- Homepage
+- Navigation bar
+- Mobile navigation
+- Fragrance-specific visual themes
+- Typography
+- Color consistency
+- Product imagery
+- Responsive design
+- Scroll animations
+- Scene sequencing
+- Scene overlap prevention
+- Debug-label removal
+- Reduced-motion accessibility
+
+Check whether the homepage has actually been simplified or still contains the old repetitive logo and scroll-driven sequence.
+
+Check whether the shopping catalogue exists separately from the cinematic fragrance worlds.
+
+Check whether the cinematic fragrance pages remain intact.
+
+## B. Product catalogue
+
+Check whether all five existing fragrances are present:
+
+1. Rasasi Hawas Gold Digger
+2. Armaf Club de Nuit Woman
+3. Lattafa Yara
+4. Rasasi Hawas Chrome
+5. Armaf Club de Nuit Intense Man
+
+Determine whether the product information comes from Supabase or hardcoded frontend objects.
+
+Check whether each product has:
+
+- Name
+- Brand
+- Unique slug
+- Description
+- Fragrance family
+- Gender or audience
+- Top notes
+- Heart notes
+- Base notes
+- Product image
+- Theme configuration
+- Active/published status
+- Featured status
+- Display order
+
+Identify missing or inconsistent data.
+
+## C. Product variants and pricing
+
+Determine whether the actual database and UI support:
+
+- 5 ml decants
+- 10 ml decants
+- Full original bottles
+- Configurable full-bottle volume
+- Separate price per variant
+- Separate stock quantity per variant
+- Variant availability
+- SKU management
+
+IMPORTANT:
+
+Full-bottle support has been requested, but do not assume it exists.
+
+Verify the schema, migration status, database objects, frontend selectors, cart structure, and backend validation.
+
+Report any difference between the requested design and the implementation.
+
+## D. Product administration
+
+Determine whether an actual admin product dashboard exists.
+
+Check whether an authorized administrator can:
+
+- Add a perfume
+- Upload its bottle image
+- Enter product details
+- Add fragrance notes
+- Create 5 ml and 10 ml variants
+- Create a full-bottle variant
+- Enter variant volumes
+- Set individual prices
+- Set stock quantities
+- Activate or deactivate variants
+- Publish or unpublish a product
+- Edit existing products
+- Update images
+- Change display order
+- Search products
+- Identify low-stock products
+
+Distinguish between an actual working form and a UI that only appears complete.
+
+Check whether saving a product actually persists it in Supabase.
+
+Determine whether the database writes are safe and whether partial failures can create incomplete products.
+
+## E. Shopping catalogue
+
+Determine whether the shopping page exists and functions independently of the cinematic fragrance experiences.
+
+Inspect:
+
+- Product grid
+- Search
+- Filters
+- Sorting
+- Product count
+- Product details
+- Variant selectors
+- Prices
+- Availability
+- Add-to-cart actions
+- Mobile usability
+- Loading states
+- Error states
+- Empty states
+
+Determine whether adding a new published product through the admin system automatically makes it available in the catalogue.
+
+## F. Cart and checkout
+
+Inspect whether the website supports:
+
+- Add to cart
+- Remove from cart
+- Update quantity
+- Change product variant
+- Correct price calculation
+- Cart persistence after refresh
+- Cart persistence between sessions
+- Subtotals
+- Delivery charges
+- Discounts or coupon codes
+- Checkout validation
+- Customer details
+- Order confirmation
+
+Check whether the cart stores stable product and variant IDs or only hardcoded names and prices.
+
+Check whether the final order amount is recalculated using trusted server-side/database values.
+
+Identify any opportunity for a user to manipulate prices or quantities.
+
+## G. Payments
+
+Determine whether any real payment gateway is integrated.
+
+Check for:
+
+- Payment initiation
+- Server-side payment verification
+- Signed webhook handling
+- Payment status persistence
+- Failed-payment handling
+- Duplicate payment protection
+- Order-to-payment association
+- Refund handling, where applicable
+
+Distinguish real integrations from placeholder buttons or simulated payments.
+
+Do not initiate actual payments.
+
+## H. Orders and fulfillment
+
+Determine whether the database and application support:
+
+- Order records
+- Order items
+- Customer details
+- Variant snapshots
+- Price snapshots
+- Delivery addresses
+- Delivery charges
+- Order status
+- Payment status
+- Inventory reservation or deduction
+- Stock restoration after cancellation
+- Shipping or courier tracking
+- Customer notifications
+- Admin order management
+
+Check whether an order remains historically accurate if a product price or description changes later.
+
+Identify race conditions that could allow overselling.
+
+## I. Customer experience
+
+Inspect:
+
+- Contact information
+- About page
+- Fragrance information
+- FAQs
+- Delivery information
+- Return and refund policy
+- Privacy policy
+- Terms and conditions
+- Trust indicators
+- Customer support access
+- Mobile shopping experience
+- Accessibility
+- Search-engine discoverability
+
+Do not invent legal compliance or claim that policies exist if they are missing.
+
+---
+
+# PART 4 — SUPABASE AND DATABASE AUDIT
+
+This section is critical.
+
+Inspect the actual database configuration and available schema evidence.
+
+Determine whether the connected Supabase project can be safely read and whether the application uses the intended project.
+
+Inspect:
+
+- Existing tables
+- Columns
+- Primary keys
+- Foreign keys
+- Unique constraints
+- Check constraints
+- Indexes
+- Relationships
+- Database functions
+- Triggers
+- RLS policies
+- Storage buckets
+- Storage access policies
+- Existing migrations
+- Migration history, where accessible
+
+Check whether migrations exist only as local files or have actually been applied.
+
+Do not treat a migration file as proof that the database has changed.
+
+If database access is unavailable, distinguish between:
+
+- Confirmed schema facts
+- Locally inferred schema
+- Unknown remote database state
+
+## Expected product model
+
+Evaluate whether the current schema supports a product and a separate set of sellable variants.
+
+The intended model should accommodate:
+
+PRODUCT
+- Product identity and description
+- Fragrance notes
+- Product image
+- Theme configuration
+- Publication status
+
+PRODUCT VARIANTS
+- 5 ml decant
+- 10 ml decant
+- Full original bottle with configurable volume
+- SKU
+- Price in LKR
+- Stock quantity
+- Variant availability
+
+Do not assume the schema already follows this model.
+
+Recommend the smallest safe set of changes required.
+
+## Database correctness
+
+Check for:
+
+- Duplicate products
+- Duplicate variant records
+- Missing variants
+- Missing required values
+- Inconsistent product IDs
+- Broken foreign keys
+- Incorrect price types
+- Negative inventory risks
+- Unconstrained stock values
+- Missing uniqueness constraints
+- Missing indexes
+- Unsafe deletion behavior
+- Missing transaction handling
+
+Identify the exact migration or policy gaps.
+
+Do not apply fixes during this audit.
+
+---
+
+# PART 5 — SECURITY AUDIT
+
+Inspect the code and configuration for:
+
+- Exposed secrets
+- Service-role keys in browser bundles
+- Incorrect environment-variable usage
+- Missing RLS policies
+- Overly permissive public policies
+- Missing admin authorization
+- Client-side-only admin checks
+- Unauthorized product modifications
+- Unauthorized price changes
+- Inventory manipulation
+- SQL injection risks
+- Cross-site scripting risks
+- Unsafe file uploads
+- Broken access controls
+- Unvalidated user input
+- Insecure order creation
+- Unverified payment callbacks
+- Sensitive information exposed through API responses
+- Dependency vulnerabilities detectable using existing safe tools
+
+For each finding, report:
+
+- Severity: Critical, High, Medium, Low, or Informational
+- Affected subsystem
+- Evidence and location
+- Potential impact
+- Recommended remediation
+
+Do not expose secret values in the report. Identify the affected variable or configuration location without printing its value.
+
+Do not run destructive exploit tests or access unauthorized data.
+
+---
+
+# PART 6 — BUGS AND CURRENT FAILURES
+
+Find existing bugs rather than only listing theoretical improvements.
+
+Inspect:
+
+- Console errors and warnings
+- TypeScript errors
+- Build failures
+- Lint failures
+- Broken routes
+- Missing imports
+- Unused or missing environment variables
+- Database query errors
+- Invalid schema references
+- Supabase connection failures
+- Incorrect image paths
+- Incorrect prices
+- Missing product variants
+- Scroll-animation regressions
+- Overlapping scenes
+- Invisible or unreadable text
+- Navigation contrast problems
+- Mobile overflow
+- Broken links
+- Inaccessible controls
+- Loading states that never finish
+- Error states that are silently ignored
+
+Use existing logs and safe read-only tests.
+
+If a problem cannot be reproduced or verified, label it as a suspected issue rather than a confirmed bug.
+
+For every confirmed bug, provide:
+
+1. Description
+2. Reproduction conditions, if known
+3. Evidence
+4. Likely root cause
+5. Severity
+6. Recommended fix
+
+Do not fix the bugs yet.
+
+---
+
+# PART 7 — ECOMMERCE BENCHMARK AND MISSING FEATURES
+
+Evaluate NIDOR against the functional expectations of modern fragrance-decant stores and well-designed ecommerce catalogues.
+
+The objective is not to copy another brand's design.
+
+The objective is to identify missing functionality that could affect customer trust, conversion, usability, operations, and profitability.
+
+Evaluate the following categories.
+
+## Product discovery
+
+- Search
+- Filters
+- Sorting
+- Product variants
+- Fragrance family filters
+- Audience filters
+- Occasion or scent-profile filters
+- Featured products
+- Related fragrances
+- Recently viewed products
+- Product recommendations
+
+## Product information
+
+- Clear descriptions
+- Fragrance notes
+- Original bottle size
+- Decant sizes
+- Concentration and version accuracy
+- Price clarity
+- Stock availability
+- Authenticity information
+- Product photographs
+- Clear distinction between decants and full original bottles
+
+## Purchasing
+
+- Cart
+- Checkout
+- Guest checkout
+- Customer accounts, if useful
+- Payment methods appropriate to the target market
+- Delivery charges
+- Order confirmation
+- Order tracking
+- Discount codes
+- Abandoned-cart recovery
+
+## Trust and customer support
+
+- About NIDOR
+- Authenticity and decanting information
+- Contact details
+- FAQs
+- Delivery policy
+- Return and refund policy
+- Privacy policy
+- Terms and conditions
+- Customer support channels
+- Reviews, if implemented with genuine customer feedback
+
+## Business operations
+
+- Admin product management
+- Variant-level stock
+- Full-bottle stock
+- Low-stock warnings
+- Order management
+- Inventory history
+- Sales reporting
+- Revenue reporting
+- Product performance
+- Discount management
+- Customer management
+- Returns and cancellations
+- Audit history for important admin actions
+
+## Marketing and growth
+
+- SEO metadata
+- Product structured data
+- Social sharing previews
+- Analytics
+- Conversion tracking
+- Email notifications
+- Search-engine indexing
+- Product feeds, where useful
+- Performance optimization
+- Campaign landing pages
+
+For every suggested feature, classify it as:
+
+- Essential before launch
+- Important soon after launch
+- Optional future enhancement
+- Unnecessary for the current stage
+
+Explain why each recommendation matters.
+
+Do not recommend every feature merely because other ecommerce sites have it.
+
+Prioritize features appropriate to a small fragrance-decant business.
+
+---
+
+# PART 8 — PERFORMANCE, SEO, AND ACCESSIBILITY
+
+Inspect:
+
+- Initial page load
+- Large image assets
+- Transparent PNG optimization
+- Lazy loading
+- Image dimensions
+- Layout shifts
+- JavaScript bundle size
+- Unnecessary animation work
+- Scroll-trigger performance
+- Mobile responsiveness
+- Keyboard navigation
+- Focus visibility
+- Screen-reader labels
+- Color contrast
+- Reduced-motion support
+- Page titles and meta descriptions
+- Canonical URLs
+- Sitemap
+- Robots directives
+- Product structured data
+- Broken internal links
+- Social sharing metadata
+
+If performance metrics cannot be collected safely, identify what must be measured rather than inventing numbers.
+
+Preserve the approved cinematic experience while identifying performance improvements.
+
+---
+
+# PART 9 — FUTURE RISKS
+
+Identify realistic problems that could emerge as NIDOR adds more products and begins accepting orders.
+
+At minimum, evaluate:
+
+- Database schema becoming difficult to extend
+- Full-bottle and decant variants being mixed up
+- Incorrect or stale prices
+- Overselling stock
+- Duplicate orders
+- Duplicate payment callbacks
+- Inconsistent inventory deductions
+- Admin access vulnerabilities
+- Product-image storage failures
+- Database migration conflicts
+- Hardcoded product data
+- Fragile route structures
+- Animation regressions
+- Slow mobile performance
+- Inadequate backups
+- Lack of error monitoring
+- No recovery plan
+- Incorrect shipping-cost calculation
+- Poor handling of cancellations and refunds
+- Dependence on one external service
+- Lack of staging/testing environment
+
+For each risk, estimate:
+
+- Likelihood: Low, Medium, or High
+- Impact: Low, Medium, or High
+- Preventive action
+- When the action should be taken
+
+Clearly distinguish current vulnerabilities from possible future problems.
+
+---
+
+# PART 10 — PRODUCT AND BUSINESS OPERATIONS
+
+Evaluate whether NIDOR can reliably operate as a real business using the current website.
+
+Consider:
+
+- How new fragrances are added
+- How prices are changed
+- How stock is updated
+- How decant stock relates to available original fragrance inventory
+- Whether stock changes are auditable
+- How full bottles and decants are distinguished
+- How orders are processed
+- How shipping costs are determined
+- How cancellations affect stock
+- How customer issues are handled
+- Whether sales data can be reconciled
+- Whether the website can support more products without source-code changes
+
+Identify operational bottlenecks that would become painful even if the website appears visually complete.
+
+Do not assume a bottle can be decanted into a particular quantity of sellable units without accounting for usable volume, handling losses, and reserved inventory.
+
+---
+
+# PART 11 — PRIORITIZED ROADMAP
+
+Produce a practical implementation roadmap divided into stages.
+
+## Stage 0 — Critical fixes
+
+Security vulnerabilities, broken database connections, missing data integrity, or anything that could cause incorrect orders or financial loss.
+
+## Stage 1 — Foundation
+
+Database correctness, product/variant schema, full-bottle support, admin product management, authentication, and inventory correctness.
+
+## Stage 2 — Core shopping
+
+Homepage, shopping catalogue, search, filters, product details, cart, checkout, and order persistence.
+
+## Stage 3 — Payments and fulfillment
+
+Payment integration, verification, delivery calculations, order processing, customer notifications, and inventory updates.
+
+## Stage 4 — UX and growth
+
+Visual refinement, accessibility, SEO, analytics, customer trust, and conversion improvements.
+
+## Stage 5 — Later enhancements
+
+Reviews, loyalty features, advanced recommendations, deeper analytics, or other features justified by actual business needs.
+
+Adjust the order when actual dependencies require it.
+
+For each proposed task, include:
+
+- Priority
+- Business or technical reason
+- Dependencies
+- Likely files or subsystems affected
+- Risk of breaking existing functionality
+- Acceptance criteria
+- Estimated complexity: Small, Medium, or Large
+
+Do not estimate implementation hours unless there is enough evidence to justify the estimate.
+
+Identify the smallest viable set of changes required to launch safely.
+
+---
+
+# PART 12 — REQUIRED FINAL REPORT
+
+Return the results in this exact structure:
+
+1. Executive summary
+2. Overall readiness assessment
+3. Verified implemented features
+4. Partially implemented features
+5. Missing features
+6. Confirmed current bugs
+7. Suspected problems and unverified areas
+8. Supabase/database audit
+9. Security findings
+10. Product, variant, pricing, and inventory audit
+11. Admin dashboard audit
+12. Shopping, cart, checkout, and order audit
+13. Design, typography, mobile, and usability audit
+14. Ecommerce benchmark and missing opportunities
+15. Future risks
+16. Prioritized roadmap
+17. Recommended immediate next five actions
+18. Outstanding questions or access needed to complete the audit
+
+Include evidence wherever possible:
+
+- File paths
+- Component names
+- Route paths
+- Database table and column names
+- Migration filenames
+- Function names
+- Test output
+- Relevant configuration locations
+
+Do not paste secrets, tokens, passwords, or sensitive customer information into the report.
+
+Use tables where useful.
+
+Avoid vague statements such as "the website needs better security" or "the database needs improvement."
+
+State exactly what is wrong, where the evidence is, why it matters, and what should be done.
+
+## FINAL RULE
+
+This report must describe the REAL current state of the NIDOR project, not the intended state.
+
+Do not modify anything during the audit.
+
+Do not begin implementation after completing the report.
+
+Finish by identifying the highest-priority next action and wait for explicit authorization before making changes.

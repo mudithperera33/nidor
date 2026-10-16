@@ -11,6 +11,12 @@ out-tsc
 # dependencies
 node_modules
 
+# Local deployment metadata, generated output, and secrets
+.vercel/
+.env
+.env.*
+!.env.example
+
 # IDEs and editors
 /.idea
 .project

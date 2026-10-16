@@ -1,0 +1,90 @@
+# NIDOR — SECURITY REMEDIATION: DEPENDENCIES AND API RATE LIMITING
+
+Use the October 9, 2026 NIDOR website audit as the basis for this task.
+
+The audit identified:
+- A critical-severity advisory involving proxy-addr@2.0.7 in the production Express dependency path.
+- A source-map-js@1.2.1 advisory in development dependency paths.
+- A postcss-selector-parser@6.0.10 advisory through Tailwind typography.
+- No rate limiting on public order creation and receipt-recovery routes.
+
+## SCOPE
+
+Fix these issues only.
+
+Do not redesign the website.
+Do not modify the approved fragrance worlds or their animations.
+Do not change product prices or stock.
+Do not alter the database schema.
+Do not apply database migrations.
+Do not modify payment or checkout business logic unless strictly necessary for security.
+
+## 1. Dependency remediation
+
+Inspect the actual resolved dependency tree and lockfile.
+
+- Upgrade proxy-addr to a patched compatible version, at least 2.0.8 if compatible with the current dependency tree.
+- Resolve the source-map-js advisory using a patched compatible version, at least 1.2.2 where applicable.
+- Resolve the postcss-selector-parser advisory using a compatible patched version. The audit identifies 7.1.6 as the fix, but inspect compatibility before upgrading across major versions.
+- Avoid indiscriminate dependency upgrades.
+- Do not use overrides that silently create an incompatible dependency tree.
+- Update the appropriate lockfile consistently.
+
+Run the dependency audit afterward and report any remaining advisories, including whether they affect production or development dependencies.
+
+## 2. Rate limiting
+
+Inspect the existing Express API and identify the actual order-creation and receipt-recovery routes.
+
+Add appropriate server-side rate limiting to protect these public endpoints.
+
+Requirements:
+
+- Apply limits at the server, not only in the frontend.
+- Return controlled HTTP 429 responses when limits are exceeded.
+- Avoid logging customer email addresses, delivery details, or other sensitive request data.
+- Ensure legitimate checkout attempts and receipt recovery still work.
+- Use conservative limits appropriate to the actual endpoints.
+- If the deployment uses multiple API instances, explain whether the chosen limiter shares state across instances.
+- Do not trust arbitrary forwarded-IP headers unless the proxy configuration is explicitly verified.
+- Do not enable Express trust proxy indiscriminately.
+
+Inspect CORS configuration and, where practical, restrict browser origins to the verified storefront origins. Remember that CORS is not a substitute for authorization or rate limiting.
+
+## 3. Testing
+
+Run:
+
+- Existing test suite
+- Typecheck
+- Production build
+- Dependency audit
+- Relevant API tests
+
+Add tests for rate-limit behavior where appropriate.
+
+Verify that:
+
+- Existing cart validation remains intact.
+- Server-side prices remain authoritative.
+- Inventory transactions remain intact.
+- Idempotency behavior remains intact.
+- Receipt recovery still avoids disclosing delivery details.
+- Rate limiting does not break normal legitimate requests.
+
+Do not submit real orders, send emails, or initiate payments.
+
+## 4. Final report
+
+Report:
+
+- Packages changed and their resolved versions.
+- Advisories fixed and advisories remaining.
+- Rate limits implemented and their configuration.
+- CORS changes, if any.
+- Tests run and results.
+- Any deployment-specific configuration required.
+
+Do not claim the production environment is protected unless its deployed dependency versions and API configuration have been verified.
+
+Stop after completing these security fixes. Do not begin unrelated feature development.

@@ -1,0 +1,5 @@
+- [NIDOR product scope](nidor-product-scope.md) — preserve the worlds; manage bottle and decant variants separately without assumed price, volume, stock, or availability.
+- [NIDOR workspace typechecks](nidor-typecheck-project-references.md) — rebuild library references before standalone artifact checks when generated declarations may be stale.
+- [Scoped pnpm updates](pnpm-lock-scoped-updates.md) — recursive lock refreshes can alter unrelated peer resolutions and catalog references; confirm the frozen graph.
+- [Supabase migration history](supabase-migration-history.md) — this database has no CLI migration ledger; reconcile remote schema history before adopting CLI pushes.
+- [Resend webhook retention](resend-webhook-retention.md) — retain webhook deduplication IDs for 30 days; Resend's automatic retry window is under 28 hours, but manual replays can be older.
